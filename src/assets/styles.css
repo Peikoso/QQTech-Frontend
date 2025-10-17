@@ -1,0 +1,345 @@
+.conteudo-container {
+  display: flex;
+  justify-content: space-between; /* separa título e botão */
+  align-items: center; /* centraliza verticalmente */
+  margin: 10px 0;
+  padding: 10px;
+}
+
+.titulo-descricao h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.titulo-descricao p {
+  margin: 2px 0 0 0;
+  color: #666;
+}
+
+button {
+  background-color: #24723b;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #20512e;
+}
+
+/* Container principal da tabela */
+.view-container {
+  margin: 10px 0;
+  padding: 10px;
+  display: block;
+  max-height: 80vh;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  overflow-x: auto; /* Scroll horizontal se tabela for grande */
+  overflow-y: auto; /* Scroll vertical se precisar */
+  background-color: #f9f9f9;
+}
+
+.small-view-container {
+  flex: 1;
+  margin: 10px;
+  padding: 10px;
+  display: block;
+  min-height: 10vh;
+  min-width: 20vh;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  overflow-x: auto; /* Scroll horizontal se tabela for grande */
+  overflow-y: auto; /* Scroll vertical se precisar */
+  background-color: #f9f9f9;
+}
+
+.small-views {
+  display: flex;
+}
+
+.small-view-container h3:first-child {
+  margin: 2px 0 0 0;
+  color: #666;
+}
+
+.small-view-container p {
+  margin: 2px 0 0 0;
+  color: #666;
+}
+
+/* Estilo da tabela */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px; /* Garante scroll horizontal se menor que o container */
+}
+
+th,
+td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #f0f0f0;
+  font-weight: 600;
+}
+
+tbody tr {
+  transition: background-color 0.2s;
+}
+
+tbody tr:hover {
+  background-color: #E6F7E6;
+}
+
+/* Nome + descrição como card interno */
+td h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+td p {
+  margin: 3px 0 0 0;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+/* Botões */
+button,
+td button {
+  background-color: #24723b;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.2s;
+}
+
+button:hover,
+td button:hover {
+  background-color: #20512e;
+}
+
+/* Botões de ação separados */
+td button {
+  margin-right: 5px;
+}
+
+/* Título e descrição do topo */
+h3:first-of-type {
+  margin-bottom: 5px;
+  font-size: 1.3rem;
+}
+
+p:first-of-type {
+  margin-bottom: 10px;
+  color: #666;
+}
+
+/* Fundo escuro do modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* transparente escuro */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Conteúdo do modal */
+.modal .modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90%;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Botão de fechar */
+.modal .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.2s;
+}
+
+.modal .close-btn:hover {
+  color: #20512e;
+}
+
+/* Inputs dentro do modal */
+.modal input,
+.modal select {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.modal label {
+  font-weight: 500;
+  margin-top: 8px;
+  display: block;
+}
+
+/* SQL maior */
+textarea#sql {
+  width: 100%;
+  height: 100px; /* aumenta a altura */
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  resize: vertical; /* permite ajustar altura */
+}
+
+/* Linhas e colunas */
+.row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.row .col {
+  flex: 1; /* cada coluna ocupa metade do espaço */
+}
+
+/* Ajustes gerais de inputs e selects */
+.modal input,
+.modal select,
+.modal textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.modal label {
+  font-weight: 500;
+  margin-top: 8px;
+  display: block;
+}
+
+.switch-container {
+  display: flex;
+  align-items: center; /* centraliza verticalmente */
+  gap: 10px; /* espaço entre toggle e label */
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+/* Toggle switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 28px;
+}
+
+.slider:before {
+  position: absolute;
+  content: '';
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.switch input:checked + .slider {
+  background-color: #24723b;
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* Label ao lado do toggle */
+.switch-label {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* Responsivo para mobile */
+@media (max-width: 768px) {
+  .view-container {
+    padding: 10px;
+  }
+
+  table {
+    font-size: 0.85rem;
+    min-width: 600px;
+  }
+
+  th,
+  td {
+    padding: 15px 15px;
+  }
+
+  button,
+  td button {
+    padding: 4px 8px;
+    font-size: 1rem;
+    margin: 5px;
+  }
+
+  .conteudo-container {
+    flex-direction: column; /* itens em coluna no mobile */
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  button {
+    align-self: flex-end; /* botão vai para a direita da coluna */
+  }
+
+  .small-views {
+    display: block;
+  }
+}
