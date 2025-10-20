@@ -92,7 +92,7 @@
           </div>
 
           <label for="roles">Roles (separados por vírgula)</label>
-          <input type="text" id="nome" placeholder="admin, operator, viewer" v-model="roles">
+          <input type="text" id="roles" placeholder="admin, operator, viewer" v-model="roles">
 
           <div class="switch-container">
             <span class="switch-label">WhatsApp Habilitado</span>
@@ -102,7 +102,7 @@
             </label>
           </div>
 
-          <button type="salvar">Salvar</button>
+          <button type="submit">Salvar</button>
         </form>
       </div>
     </div>

@@ -9,6 +9,7 @@
       <h2 class="logo">Plantão Monitor</h2>
       <nav>
         <router-link to="/dashboard" class="link" active-class="ativo">Dashboard</router-link>
+        <router-link to="/incidentes" class="link" active-class="ativo">Incidentes</router-link>
         <router-link to="/rules" class="link" active-class="ativo">Regras</router-link>
         <router-link to="/users" class="link" active-class="ativo">Usuários</router-link>
         <router-link to="/logs" class="link" active-class="ativo">Logs de Execução</router-link>
@@ -19,7 +20,7 @@
           <span>{{ email }}</span>
         </div>
         <ul v-if="dropdownOpen" class="dropdown">
-          <li><a class="link" @click.prevent="logout">Preferências</a></li>
+          <li><a class="link" @click.prevent="preferenciaModal=true">Preferências</a></li>
           <li><a class="link" @click.prevent="logout">Sair</a></li>
         </ul>
       </div>
@@ -36,6 +37,7 @@ export default {
   name: 'NavbarComponent',
   data() {
     return {
+      preferenciaModal: false,
       logo,
       email: '',
       dropdownOpen: false,
@@ -52,7 +54,6 @@ export default {
   methods: {
     toggleDropdown() {
       this.dropdownOpen = !this.dropdownOpen
-      console.log('cliquei')
     },
     logout() {
       signOut(auth)

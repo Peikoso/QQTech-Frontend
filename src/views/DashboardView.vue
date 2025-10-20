@@ -79,7 +79,7 @@
             <th>Regra</th>
             <th>Descricao</th>
             <th>Prioridade</th>
-            <th>Aberta</th>
+            <th>Aberta em</th>
             <th>Status</th>
           </tr>
         </thead>
@@ -105,6 +105,7 @@ export default{
       incidentes: [
         {'regra': 'Teste Banco',
         'descricao': 'testar o banco',
+        'prioridade': 'Alta',
         'status': 'Open',
         'criado_em': '07/10/2025 06:15'
       }
