@@ -47,9 +47,6 @@
           <label for="email">Email</label>
           <input type="email" id="email" placeholder="Ex.: user@example.com" v-model="user.email">
 
-          <label for="password">Senha</label>
-          <input type="password" id="password" placeholder="" v-model="user.password">
-
           <label for="roles">Roles (separados por vírgula)</label>
           <input type="text" id="roles" placeholder="ex.: CANAIS_DIGITAIS" v-model="user.roles">
 
@@ -69,7 +66,6 @@
 
 <script>
 import { db } from '../firebaseConfig.js'
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, onSnapshot, collection } from "firebase/firestore";
 
 export default {
@@ -79,7 +75,6 @@ export default {
       user: {
         nome: '',
         email: '',
-        password: '',
         matricula: '',
         perfil: 'viewer',
         roles: '',
@@ -99,29 +94,14 @@ export default {
       })
     },
     createUser() {
-      const auth = getAuth();
-      this.user.email = this.user.email.trim();
-      this.user.password = this.user.password.trim();
-      if (!this.user.email || !this.user.password) {
-        alert('Please enter both email and password.');
-        return;
-      }
-      createUserWithEmailAndPassword(auth, this.user.email, this.user.password)
-        .then((userCredential) => {
-          // Signed up
-          const userUID = userCredential.user.uid;
-
-          setDoc(doc(db, 'users', userUID),{
-            nome: this.user.nome,
-            matricula: this.user.matricula,
-            perfil: this.user.perfil,
-            roles: this.user.roles,
-            email: this.user.email,
-            createdAt: new Date(),
-          }, {merge: true})
-
-          // ...
-        })
+      setDoc(doc(db, 'users', this.user.email),{
+        nome: this.user.nome,
+        matricula: this.user.matricula,
+        perfil: this.user.perfil,
+        roles: this.user.roles,
+        email: this.user.email,
+        createdAt: new Date(),
+      }, {merge: true})
         .then(() => {
           this.novoUsuarioModal = false
           this.limparForm()
@@ -129,7 +109,7 @@ export default {
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          console.error('Error during sign up:', errorCode, errorMessage);
+          console.error('Error durante a criação do usuario: ', errorCode, errorMessage);
           // ..
         });
 

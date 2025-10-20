@@ -8,11 +8,12 @@
       <br>
       <h2 class="logo">Plantão Monitor</h2>
       <nav>
-        <router-link to="/dashboard" class="link" active-class="ativo">Dashboard</router-link>
-        <router-link to="/incidentes" class="link" active-class="ativo">Incidentes</router-link>
-        <router-link to="/rules" class="link" active-class="ativo">Regras</router-link>
-        <router-link to="/users" class="link" active-class="ativo">Usuários</router-link>
-        <router-link to="/logs" class="link" active-class="ativo">Logs de Execução</router-link>
+        <router-link :to="{name: 'dashboard'}" class="link" active-class="ativo">Dashboard</router-link>
+        <router-link :to="{name: 'incidentes'}" class="link" active-class="ativo">Incidentes</router-link>
+        <router-link :to="{name: 'rules' }" class="link" active-class="ativo">Regras</router-link>
+        <router-link :to="{name: 'rota'}" class="link" active-class="ativo">Gestão de Rota</router-link>
+        <router-link :to="{name: 'users'}" class="link" active-class="ativo">Usuários</router-link>
+        <router-link :to="{name: 'logs'}" class="link" active-class="ativo">Logs de Execução</router-link>
       </nav>
 
       <div class="user-menu" @click="toggleDropdown">

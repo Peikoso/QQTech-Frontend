@@ -38,8 +38,9 @@
 </template>
 
 <script>
-
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { db } from '../firebaseConfig.js'
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword  } from "firebase/auth";
+import { collection, query, where, getDocs } from "firebase/firestore";
 export default {
   name: 'LoginView',
   data() {
@@ -56,9 +57,22 @@ export default {
           this.$router.push({ name: 'dashboard' });
         })
         .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.error('Login failed:', errorCode, errorMessage);
+          const q = query(collection(db, 'users'), where('email', '==', this.email))
+
+          getDocs(q).then(QuerySnapshot => {
+            if(!QuerySnapshot.empty){
+            createUserWithEmailAndPassword(auth, this.email, this.password).then(() => {
+              signInWithEmailAndPassword(auth, this.email, this.password).then(() => {
+                this.$router.push({ name: 'dashboard' });
+              })
+            })
+            }
+            else{
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              console.error('Error durante o login: ', errorCode, errorMessage);
+            }
+          })
         });
     },
 

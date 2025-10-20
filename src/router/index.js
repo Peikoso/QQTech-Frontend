@@ -2,11 +2,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 import DashboardView from '../views/DashboardView.vue'
 import IncidentesView from '../views/IncidentesView.vue'
 import RulesView from '../views/RulesView.vue'
+import RotasView from '@/views/RotasView.vue'
 import UsersView from '../views/UsersView.vue'
 import LogsView from '../views/LogsView.vue'
 import LoginView from '../views/LoginView.vue'
 import { auth } from '../firebaseConfig.js'
 import { onAuthStateChanged } from "firebase/auth";
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +40,12 @@ const router = createRouter({
       name: 'rules',
       component: RulesView,
       meta: { requiresAuth: true }
+    },
+    {
+     path: '/rota',
+     name: 'rota',
+     component: RotasView,
+     meta: { requiresAuth: true}
     },
     {
       path: '/users',
