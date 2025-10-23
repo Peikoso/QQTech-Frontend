@@ -39,7 +39,7 @@
 
     <div class="modal" v-if="regraModal">
       <div class="modal-content">
-        <button class="close-btn" @click="regraModal = false; modoEdicao = false">&times;</button>
+        <button class="close-btn" @click="regraModal = false; modoEdicao = false; this.limparForm()">&times;</button>
         <form @submit.prevent="salvarRegras">
           <label for="nome">Nome</label>
           <input type="text" id="nome" placeholder="Nome da regra" v-model="nome">

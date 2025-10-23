@@ -5,7 +5,6 @@
         <h3>Gestão de Incidentes</h3>
         <p>Configure e gerencie os incidentes</p>
       </div>
-      <button @click="incidenteModal = true">Novo Incidente</button>
     </div>
     <div class="view-container">
       <h2 v-if="incidentes.length == 0">Nenhum Incidente Registrado</h2>
@@ -13,7 +12,6 @@
         <thead>
           <tr>
             <th>Regra</th>
-            <th>Descricao</th>
             <th>Prioridade</th>
             <th>Aberta em</th>
             <th>Status</th>
@@ -28,8 +26,7 @@
             <td>{{ incidente.created_at }}</td>
             <td><button>{{ incidente.status }}</button></td>
             <td>
-              <button @click="detalhesIncidente(incidente)">Ver Detalhes</button>
-              <button @click="excluirIncidente">Excluir</button>
+              <button @click="detalhesIncidente(incidente)">Ver</button>
             </td>
           </tr>
         </tbody>

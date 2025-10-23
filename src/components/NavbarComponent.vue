@@ -12,13 +12,13 @@
         <router-link :to="{name: 'incidentes'}" class="link" active-class="ativo">Incidentes</router-link>
         <router-link :to="{name: 'rules' }" class="link" active-class="ativo">Regras</router-link>
         <router-link :to="{name: 'rota'}" class="link" active-class="ativo">Gestão de Rota</router-link>
-        <router-link :to="{name: 'users'}" class="link" active-class="ativo">Usuários</router-link>
+        <router-link v-if="userStore.perfil === 'admin'" :to="{name: 'users'}" class="link" active-class="ativo">Usuários</router-link>
         <router-link :to="{name: 'logs'}" class="link" active-class="ativo">Logs de Execução</router-link>
       </nav>
 
       <div class="user-menu" @click="toggleDropdown">
         <div class="user-info">
-          <span>{{ email }}</span>
+          <span>{{ userStore.nome }}</span>
         </div>
         <ul v-if="dropdownOpen" class="dropdown">
           <li><a class="link" @click.prevent="preferenciaModal=true">Preferências</a></li>
@@ -31,26 +31,23 @@
 
 <script>
 import { auth } from '../firebaseConfig.js'
-import { onAuthStateChanged, signOut } from 'firebase/auth'
+import { signOut } from 'firebase/auth'
 import logo from '@/assets/icons/logo.png'
+import { useUserStore } from '../stores/user';
 
 export default {
   name: 'NavbarComponent',
+  setup() {
+    const userStore = useUserStore()
+    return { userStore }
+  },
   data() {
     return {
       preferenciaModal: false,
       logo,
-      email: '',
       dropdownOpen: false,
       sidebarAberta: false,
     }
-  },
-  mounted() {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        this.email = user.email
-      }
-    });
   },
   methods: {
     toggleDropdown() {

@@ -6,9 +6,10 @@ import RotasView from '@/views/RotasView.vue'
 import UsersView from '../views/UsersView.vue'
 import LogsView from '../views/LogsView.vue'
 import LoginView from '../views/LoginView.vue'
-import { auth } from '../firebaseConfig.js'
+import { useUserStore } from '../stores/user.js'
 import { onAuthStateChanged } from "firebase/auth";
-
+import { auth, db } from '../firebaseConfig.js'
+import { doc, getDoc } from "firebase/firestore";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,7 +52,7 @@ const router = createRouter({
       path: '/users',
       name: 'users',
       component: UsersView,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true, perfil: 'admin' }
     },
     {
       path: '/logs',
@@ -63,17 +64,51 @@ const router = createRouter({
 })
 
 
-router.beforeEach((to, from, next) => {
-  const unsubscribe = onAuthStateChanged(auth, (user) => {
-    if (to.name !== "login" && !user) {
-      next({ name: "login" });
-    }
-    if (to.name === "login" && user) {
-      next({ name: "dashboard" });
-    }
-    next();
-    unsubscribe();
-  });
+// Guard global assíncrono
+router.beforeEach(async (to, from, next) => {
+  const userStore = useUserStore()
+
+  // aguarda Firebase Auth carregar usuário se ainda não estiver
+  if (userStore.loading) {
+    await new Promise((resolve) => {
+      const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          const userDocRef = doc(db, 'users', user.uid);
+          const userSnap = await getDoc(userDocRef);
+
+          if (userSnap.exists()) {
+            const userData = userSnap.data();
+            userStore.setUser({
+              uid: user.uid,
+              nome: userData.nome,
+              email: userData.email,
+              perfil: userData.perfil,
+            });
+          } else {
+            userStore.clearUser();
+          }
+        } else {
+          userStore.clearUser();
+        }
+
+        unsubscribe(); // não escuta mais
+        resolve(true);
+      });
+    });
+  }
+
+  // verifica se rota exige autenticação
+  if (to.meta.requiresAuth && !userStore.uid) {
+    return next({ name: 'login' });
+  }
+
+  // verifica perfil específico (ex: admin)
+  if (to.meta.perfil && userStore.uid && to.meta.perfil !== userStore.perfil) {
+    return next({ name: 'dashboard' });
+  }
+
+  next();
 });
+
 
 export default router

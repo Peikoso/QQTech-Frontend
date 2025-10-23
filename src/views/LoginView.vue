@@ -40,7 +40,7 @@
 <script>
 import { db } from '../firebaseConfig.js'
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword  } from "firebase/auth";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, setDoc, deleteDoc, doc } from "firebase/firestore";
 export default {
   name: 'LoginView',
   data() {
@@ -50,32 +50,42 @@ export default {
     }
   },
   methods: {
-    handleLogin() {
+    async handleLogin() {
       const auth = getAuth();
-      signInWithEmailAndPassword(auth, this.email, this.password)
-        .then(() => {
-          this.$router.push({ name: 'dashboard' });
-        })
-        .catch((error) => {
-          const q = query(collection(db, 'users'), where('email', '==', this.email))
 
-          getDocs(q).then(QuerySnapshot => {
-            if(!QuerySnapshot.empty){
-            createUserWithEmailAndPassword(auth, this.email, this.password).then(() => {
-              signInWithEmailAndPassword(auth, this.email, this.password).then(() => {
-                this.$router.push({ name: 'dashboard' });
-              })
-            })
-            }
-            else{
-              const errorCode = error.code;
-              const errorMessage = error.message;
-              console.error('Error durante o login: ', errorCode, errorMessage);
-            }
-          })
-        });
-    },
+      try {
+        await signInWithEmailAndPassword(auth, this.email, this.password);
+        this.$router.push({ name: 'dashboard' });
+      } catch (error) {
+        try {
+          const q = query(collection(db, 'users'), where('email', '==', this.email));
+          const querySnapshot = await getDocs(q);
 
+          if(querySnapshot.empty) throw new Error("Usuário não encontrado no Firestore!");
+
+          if (!querySnapshot.empty) {
+            const oldDoc = querySnapshot.docs[0];
+            const oldData = oldDoc.data();
+
+            const userCredential = await createUserWithEmailAndPassword(auth, this.email, this.password);
+
+            const uid = userCredential.user.uid;
+
+            await deleteDoc(doc(db, 'users', oldDoc.id));
+            await setDoc(doc(db, 'users', uid), {
+              ...oldData,
+            }, { merge: true });
+
+            await signInWithEmailAndPassword(auth, this.email, this.password);
+            this.$router.push({ name: 'dashboard' });
+          } else {
+            console.error('Error durante o login: ', error.code, error.message);
+          }
+        } catch (innerError) {
+          console.error('Erro ao criar usuário ou logar: ', innerError.code, innerError.message);
+        }
+      }
+    }
   },
 }
 </script>
