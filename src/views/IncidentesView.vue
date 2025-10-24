@@ -35,7 +35,6 @@
             <th>Prioridade</th>
             <th>Aberta em</th>
             <th>Status</th>
-            <th>Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -45,7 +44,6 @@
               {{ incidente.id }}
             </td>
             <td>{{ regras.find(regra => regra.id === incidente.regra_id)?.nome }}</td>
-            <td>{{ incidente.descricao }}</td>
             <td>{{ regras.find(regra => regra.id === incidente.regra_id)?.prioridade  }}</td>
             <td>{{ incidente.created_at }}</td>
             <td><button>{{ incidente.status }}</button></td>
@@ -64,7 +62,6 @@
             <p><strong>Regra ID:</strong> {{ incidente.regra_id }}</p>
             <p><strong>User ID:</strong> {{ incidente.user_id }}</p>
             <p><strong>Status:</strong> {{ incidente.status }}</p>
-            <p><strong>Descrição:</strong> {{ incidente.descricao }}</p>
             <p><strong>Comentário:</strong> {{ incidente.comentario }}</p>
             <p><strong>Criado em:</strong> {{ incidente.created_at }}</p>
             <p><strong>Ack em:</strong> {{ incidente.ack_at }}</p>
@@ -91,7 +88,6 @@ export default {
         regra_id: '',
         user_id: '',
         status: '',
-        descricao: '',
         comentario: '',
         created_at: '',
         ack_at: '',
@@ -122,7 +118,6 @@ export default {
       this.incidente.regra_id = incidente.regra_id
       this.incidente.user_id = incidente.user_id
       this.incidente.status = incidente.status
-      this.incidente.descricao = incidente.descricao
       this.incidente.comentario = incidente.comentario
       this.incidente.created_at = incidente.created_at
       this.incidente.ack_at = incidente.ack_at
