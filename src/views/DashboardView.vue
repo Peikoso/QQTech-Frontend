@@ -72,12 +72,15 @@
     </div>
     <div class="view-container">
       <p>Feed de Incidentes</p>
+      <div>
+        <label class="filtro-label" for="filtro">Filtrar incidentes</label>
+        <input type="text" id="filtro" v-model="filtro" placeholder="Pesquise por regra, status, prioridade...">
+      </div>
       <h2 v-if="incidentes.length == 0">Nenhum incidente</h2>
       <table  v-if="incidentes.length >= 1">
         <thead>
           <tr>
             <th>Regra</th>
-            <th>Descricao</th>
             <th>Prioridade</th>
             <th>Aberta em</th>
             <th>Status</th>
@@ -86,7 +89,6 @@
         <tbody>
           <tr v-for="incidente in incidentes" :key="incidente.id">
             <td>{{ incidente.regra }}</td>
-            <td>{{ incidente.descricao }}</td>
             <td>{{ incidente.prioridade }}</td>
             <td>{{ incidente.criado_em }}</td>
             <td>{{ incidente.status }}</td>
@@ -104,7 +106,6 @@ export default{
     return{
       incidentes: [
         {'regra': 'Teste Banco',
-        'descricao': 'testar o banco',
         'prioridade': 'Alta',
         'status': 'Open',
         'criado_em': '07/10/2025 06:15'

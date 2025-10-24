@@ -168,6 +168,7 @@ export default {
 }
 
 .side-button {
+  margin: 0px;
   position: fixed;
   background-color: #269447;
   color: white;

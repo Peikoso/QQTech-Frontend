@@ -5,9 +5,16 @@
         <h3>Gestão de Regras</h3>
         <p>Configure e gerencie as regras de monitoramento</p>
       </div>
-      <button @click="regraModal = true">Nova Regra</button>
+      <div>
+        <button @click="sandboxModal = true">SandBox</button>
+        <button @click="regraModal = true">Nova Regra</button>
+      </div>
     </div>
     <div class="view-container">
+      <div>
+        <label class="filtro-label" for="filtro">Filtrar Regras</label>
+        <input type="text" id="filtro" v-model="filtro" placeholder="Digite o nome da regra">
+      </div>
       <h2 v-if="regras.length == 0">Nenhuma Regra Registrada </h2>
       <table  v-if="regras.length >= 1">
         <thead>
@@ -28,7 +35,9 @@
             <td>{{ regra.banco }}</td>
             <td>{{ regra.minuto_atualizacao }} minutos</td>
             <td>{{ regra.prioridade }}</td>
-            <td>
+            <td class="actions">
+              <button class="icon-btn" @click="executarRegra(regra)"><img :src="regra.executar ? pause : play"></button>
+              <button class="icon-btn" @click="silenciarRegra(regra)"><img :src="regra.silenciar ? volume_mute : volume_up"></button>
               <button @click="editarRegra(regra)">Editar</button>
               <button @click="excluirRegra">Excluir</button>
             </td>
@@ -42,26 +51,26 @@
         <button class="close-btn" @click="regraModal = false; modoEdicao = false; this.limparForm()">&times;</button>
         <form @submit.prevent="salvarRegras">
           <label for="nome">Nome</label>
-          <input type="text" id="nome" placeholder="Nome da regra" v-model="nome">
+          <input type="text" id="nome" placeholder="Nome da regra" v-model="regra.nome">
 
           <label for="descricao">Descrição</label>
-          <input type="text" id="descricao" placeholder="Descreva o propósito da regra" v-model="descricao">
+          <input type="text" id="descricao" placeholder="Descreva o propósito da regra" v-model="regra.descricao">
 
           <label for="sql">SQL</label>
-          <textarea id="sql" placeholder="SELECT * FROM ..." v-model="sql"></textarea>
+          <textarea id="sql" placeholder="SELECT * FROM ..." v-model="regra.sql"></textarea>
           <p>Apenas comandos SELECT são permitidos</p>
 
           <div class="row">
             <div class="col">
               <label for="banco">Banco de Dados</label>
-              <select id="banco" v-model="banco">
+              <select id="banco" v-model="regra.banco">
                 <option value="PostgreSQL">PostgreSQL</option>
                 <option value="Oracle">Oracle</option>
               </select>
             </div>
             <div class="col">
               <label for="prioridade">Prioridade</label>
-              <select id="prioridade" v-model="prioridade">
+              <select id="prioridade" v-model="regra.prioridade">
                 <option value="Baixa">Baixa</option>
                 <option value="Média">Média</option>
                 <option value="Alta">Alta</option>
@@ -72,64 +81,119 @@
           <div class="row">
             <div class="col">
               <label for="minuto_atualizacao">Intervalo (minutos)</label>
-              <input type="number" id="minuto_atualizacao" v-model.number="minuto_atualizacao" min="0">
+              <input type="number" id="minuto_atualizacao" v-model.number="regra.minuto_atualizacao" min="0">
             </div>
             <div class="col">
               <label for="qtd_erro_max">Máx. Erros</label>
-              <input type="number" id="qtd_erro_max" v-model.number="qtd_erro_max" min="0">
+              <input type="number" id="qtd_erro_max" v-model.number="regra.qtd_erro_max" min="0">
             </div>
           </div>
 
           <div class="row">
             <div class="col">
               <label for="hora_inicio">Hora Início</label>
-              <input type="time" id="hora_inicio" v-model="hora_inicio">
+              <input type="time" id="hora_inicio" v-model="regra.hora_inicio">
             </div>
             <div class="col">
               <label for="hora_final">Hora Final</label>
-              <input type="time" id="hora_final" v-model="hora_final">
+              <input type="time" id="hora_final" v-model="regra.hora_final">
             </div>
           </div>
 
           <label for="roles">Roles (separados por vírgula)</label>
-          <input type="text" id="roles" placeholder="admin, operator, viewer" v-model="roles">
+          <input type="text" id="roles" placeholder="INFRA, DEV, CANAIS_DIGITAIS..." v-model="regra.roles">
 
-          <div class="switch-container">
-            <span class="switch-label">WhatsApp Habilitado</span>
-            <label class="switch">
-              <input type="checkbox" v-model="whatsapp">
-              <span class="slider"></span>
-            </label>
+          <div class="row">
+            <div class="col">
+              <div class="switch-container">
+                <span class="switch-label">Notificação</span>
+                <label class="switch">
+                  <input type="checkbox" v-model="regra.notificacao">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="col">
+              <div class="switch-container">
+                <span class="switch-label">Silenciar</span>
+                <label class="switch">
+                  <input type="checkbox" v-model="regra.silenciar">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="col">
+              <div class="switch-container">
+                <span class="switch-label">Executar</span>
+                <label class="switch">
+                  <input type="checkbox" v-model="regra.executar">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
           </div>
-
           <button type="submit">Salvar</button>
         </form>
       </div>
     </div>
+    <div v-if="sandboxModal" class="modal">
+      <div class="modal-content">
+        <button class="close-btn" @click="sandboxModal = false; this.limparSandbox()">&times;</button>
+        <form @submit.prevent="executarSandbox">
+          <label for="sql">SQL</label>
+          <textarea id="sql" placeholder="SELECT * FROM ..." v-model="sandbox.sql"></textarea>
+          <p>Apenas comandos SELECT são permitidos</p>
 
+          <button type="submit">Executar</button>
+          <br><br>
+          <p>{{ sandbox.resultado }}</p>
+          <hr>
+        </form>
+      </div>
+
+    </div>
   </div>
 </template>
 
 <script>
+import play from '@/assets/icons/play.svg';
+import pause from '@/assets/icons/pause.svg';
+import volume_up from '@/assets/icons/volume_up.svg';
+import volume_mute from '@/assets/icons/volume_mute.svg';
+
 export default {
   name: 'RulesView',
   data(){
     return{
-      id: '',
-      nome: '',
-      descricao: '',
-      sql: '',
-      banco: 'PostgreSQL',
-      prioridade: 'Média',
-      minuto_atualizacao: 0,
-      qtd_erro_max: 0,
-      hora_inicio: '00:00',
-      hora_final: '00:00',
-      roles: '',
-      whatsapp: true,
+      regra: {
+        id: '',
+        nome: '',
+        descricao: '',
+        sql: '',
+        banco: 'PostgreSQL',
+        prioridade: 'Média',
+        minuto_atualizacao: 0,
+        qtd_erro_max: 0,
+        hora_inicio: '00:00',
+        hora_final: '00:00',
+        roles: '',
+        notificacao: true,
+        silenciar: false,
+        executar: false
+      },
       regras: [],
+      filtro: '',
       regraModal: false,
-      modoEdicao: false
+      modoEdicao: false,
+      sandboxModal: false,
+      sandbox: {
+        sql: '',
+        resultado: '',
+      },
+      play,
+      pause,
+      volume_up,
+      volume_mute
     }
   },
   methods: {
@@ -145,7 +209,9 @@ export default {
         hora_inicio: this.hora_inicio,
         hora_final: this.hora_final,
         roles: this.roles,
-        whatsapp: this.whatsapp,
+        notificacao: this.notificacao,
+        silenciar: this.silenciar,
+        executar: this.executar
       }
 
       if(this.modoEdicao == false){
@@ -159,7 +225,7 @@ export default {
           id: this.id,
           ...data
         }
-        const index = this.regras.findIndex(regra => regra.id === this.id)
+        const index = this.regras.findIndex(regra => regra.id === this.regra.id)
         this.regras[index] = novoData
 
       }
@@ -174,28 +240,40 @@ export default {
       this.modoEdicao = true
       this.regraModal = true
 
-      this.id = regra.id
-      this.nome = regra.nome
-      this.descricao = regra.descricao
-      this.sql = regra.sql
-      this.banco = regra.banco
-      this.prioridade = regra.prioridade
-      this.minuto_atualizacao = regra.minuto_atualizacao
-      this.qtd_erro_max = regra.qtd_erro_max
-      this.hora_inicio = regra.hora_inicio
-      this.hora_final = regra.hora_final
-      this.roles = regra.roles
-      this.whatsapp = regra.whatsapp
+      this.regra.id = regra.id
+      this.regra.nome = regra.nome
+      this.regra.descricao = regra.descricao
+      this.regra.sql = regra.sql
+      this.regra.banco = regra.banco
+      this.regra.prioridade = regra.prioridade
+      this.regra.minuto_atualizacao = regra.minuto_atualizacao
+      this.regra.qtd_erro_max = regra.qtd_erro_max
+      this.regra.hora_inicio = regra.hora_inicio
+      this.regra.hora_final = regra.hora_final
+      this.regra.roles = regra.roles
+      this.regra.notificacao = regra.notificacao
+      this.regra.silenciar = regra.silenciar
+      this.regra.executar = regra.executar
+    },
+
+    silenciarRegra(regra){
+      regra.silenciar = !regra.silenciar
+      this.salvarLocalStorageRegras()
+    },
+
+    executarRegra(regra){
+      regra.executar = !regra.executar
+      this.salvarLocalStorageRegras()
     },
 
     excluirRegra() {
-      const index = this.regras.findIndex(regra => regra.id === this.id)
+      const index = this.regras.findIndex(regra => regra.id === this.regra.id)
       this.regras.splice(index, 1)
       this.salvarLocalStorageRegras()
     },
 
     carregarLocalStorageRegras() {
-      const dados = JSON.parse(localStorage.getItem('regras')) || []
+      const dados = JSON.parse(localStorage.getItem('regras')) || [];
 
       return dados
     },
@@ -206,18 +284,27 @@ export default {
 
 
     limparForm() {
-      this.id = '';
-      this.nome = '';
-      this.descricao = '';
-      this.sql = '';
-      this.banco = 'PostgreSQL';
-      this.prioridade = 'Média';
-      this.minuto_atualizacao = 0;
-      this.qtd_erro_max = 0;
-      this.hora_inicio = '00:00';
-      this.hora_final = '00:00';
-      this.roles = '';
-      this.whatsapp = true;
+      this.regra.id = '';
+      this.regra.nome = '';
+      this.regra.descricao = '';
+      this.regra.sql = '';
+      this.regra.banco = 'PostgreSQL';
+      this.regra.prioridade = 'Média';
+      this.regra.minuto_atualizacao = 0;
+      this.regra.qtd_erro_max = 0;
+      this.regra.hora_inicio = '00:00';
+      this.regra.hora_final = '00:00';
+      this.regra.roles = '';
+      this.regra.notificacao = true;
+      this.regra.silenciar = false;
+      this.regra.executar = false;
+    },
+    limparSandbox(){
+      this.sandbox.sql = '';
+      this.sandbox.resultado = '';
+    },
+    executarSandbox(){
+      this.sandbox.resultado = 'Sucess'
     }
   },
   mounted() {
