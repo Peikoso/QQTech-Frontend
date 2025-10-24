@@ -88,13 +88,32 @@
         </thead>
         <tbody>
           <tr v-for="incidente in incidentes" :key="incidente.id">
-            <td>{{ incidente.regra }}</td>
-            <td>{{ incidente.prioridade }}</td>
-            <td>{{ incidente.criado_em }}</td>
-            <td>{{ incidente.status }}</td>
+            <td>{{ regras.find(regra => regra.id === incidente.regra_id)?.nome }}</td>
+            <td>{{ regras.find(regra => regra.id === incidente.regra_id)?.prioridade  }}</td>
+            <td>{{ incidente.created_at }}</td>
+            <td style="text-align: center">
+              <button
+                class="button-status"
+                :class="buttonStatus(incidente.status)"
+                @click="mudarStatus(incidente)"
+              >
+                {{ incidente.status }}
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
+    </div>
+    <div v-if="comentarioModal" class="modal">
+      <div class="modal-content">
+        <button class="close-btn" @click="comentarioModal = false; this.limparComentario()">&times;</button>
+        <form @submit.prevent="adicionarComentario()">
+          <label for="comentario">Comentário</label>
+          <textarea id="comentario" v-model="novoComentario"></textarea>
+          <br /><br />
+          <button type="submit">Salvar</button>
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -104,22 +123,89 @@ export default{
   name: 'DashboardView',
   data(){
     return{
-      incidentes: [
-        {'regra': 'Teste Banco',
-        'prioridade': 'Alta',
-        'status': 'Open',
-        'criado_em': '07/10/2025 06:15'
-      }
-      ],
+      incidentes: [],
+      regras: [],
+      user: {},
+      filtro: '',
       tratamento: 3,
       fechados: 4,
       regras_ativas: 2,
       tempo_medio_ack: 1,
-      tempo_medio_res: 10
+      tempo_medio_res: 10,
+      comentarioModal: false,
+      novoComentario: '',
     }
+  },
+  methods: {
+    carregarLocalStorage() {
+      this.incidentes = JSON.parse(localStorage.getItem('incidentes')) || []
+      this.regras = JSON.parse(localStorage.getItem('regras')) || []
+      this.user = JSON.parse(localStorage.getItem('userData')) || {}
+    },
+
+    salvarLocalStorage() {
+      localStorage.setItem('incidentes', JSON.stringify(this.incidentes))
+    },
+
+    buttonStatus(status) {
+      if (status === 'open') {
+        return 'button-red'
+      } else if (status === 'ack') {
+        return 'button-yellow'
+      } else {
+        return ''
+      }
+    },
+
+    mudarStatus(incidente) {
+      if (incidente.status === 'ack' || incidente.status === 'open') {
+        this.incidente = incidente
+        this.comentarioModal = true
+      }
+    },
+    adicionarComentario() {
+      let novoIncidente = { ...this.incidente }
+
+      if(novoIncidente.status === 'ack') {
+        novoIncidente.user_id_closed = this.user.id
+        novoIncidente.status = 'closed'
+        novoIncidente.comentario_closed = this.novoComentario
+        novoIncidente.closed_at = new Date()
+      }
+
+      if (novoIncidente.status === 'open') {
+        novoIncidente.user_id_ack = this.user.id
+        novoIncidente.status = 'ack'
+        novoIncidente.comentario_ack = this.novoComentario
+        novoIncidente.ack_at = new Date()
+      }
+
+      const index = this.incidentes.findIndex(incidente => incidente.id === novoIncidente.id)
+      this.incidentes[index] = novoIncidente
+
+      this.comentarioModal = false
+      this.salvarLocalStorage()
+      this.limparIncidente()
+    },
+    limparIncidente() {
+      this.incidente.id = ''
+      this.incidente.regra_id = ''
+      this.incidente.user_id_ack = ''
+      this.incidente.user_id_closed = ''
+      this.incidente.status = ''
+      this.incidente.comentario_ack = ''
+      this.incidente.comentario_closed = ''
+      this.incidente.created_at = ''
+      this.incidente.ack_at = ''
+      this.incidente.closed_at = ''
+      this.novoComentario = ''
+    },
+  },
+  mounted(){
+    this.carregarLocalStorage()
   }
 }
 </script>
 
 <style src="@/assets/styles.css"></style>
-
+<style src="@/assets/button_status.css"></style>

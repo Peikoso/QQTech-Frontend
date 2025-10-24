@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <NavbarComponent />
+    <NavbarComponent v-if="currentUser" />
     <main class="conteudo">
       <router-view />
     </main>
@@ -10,12 +10,27 @@
 
 <script>
 import NavbarComponent from './components/NavbarComponent.vue'
-
+import { auth } from './firebaseConfig.js'
+import { onAuthStateChanged } from 'firebase/auth'
 export default {
   name: 'App',
   components: {
     NavbarComponent
+  },
+  data() {
+    return {
+      currentUser: null
+    }
+  },
+  mounted() {
+    this.unsubscribe = onAuthStateChanged(auth, (user) => {
+      this.currentUser = user
+    })
+  },
+  beforeUnmount() {
+    if (this.unsubscribe) this.unsubscribe()
   }
+
 }
 
 </script>

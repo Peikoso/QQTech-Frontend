@@ -28,6 +28,7 @@
             <td>{{ user.perfil }}</td>
             <td>
               <button v-if="!user.pending" @click="editarUser(user)">Editar</button>
+              <button v-if="!user.pending" @click="deleteUser(user)">Deletar</button>
               <button v-if="user.pending" @click="aprovarUser(user)">Aprovar</button>
             </td>
           </tr>
@@ -66,7 +67,7 @@
 
 <script>
 import { db } from '../firebaseConfig.js'
-import { doc, setDoc, onSnapshot, collection, getDocs, where, query } from "firebase/firestore";
+import { doc, setDoc, onSnapshot, collection, getDocs, where, query, deleteDoc } from "firebase/firestore";
 
 export default {
   name: 'UsersView',
@@ -172,6 +173,9 @@ export default {
       this.user.perfil = 'viewer'
       this.user.pending = ''
       this.user.createdAt = ''
+    },
+    async deleteUser(user) {
+      await deleteDoc(doc(db, 'users', user.uid))
     },
   },
   mounted() {

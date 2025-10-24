@@ -12,13 +12,13 @@
         <router-link :to="{name: 'incidentes'}" class="link" active-class="ativo">Incidentes</router-link>
         <router-link :to="{name: 'rules' }" class="link" active-class="ativo">Regras</router-link>
         <router-link :to="{name: 'rota'}" class="link" active-class="ativo">Gestão de Rota</router-link>
-        <router-link v-if="userStore.perfil === 'admin'" :to="{name: 'users'}" class="link" active-class="ativo">Usuários</router-link>
+        <router-link :to="{name: 'users'}" class="link" active-class="ativo">Usuários</router-link>
         <router-link :to="{name: 'logs'}" class="link" active-class="ativo">Logs de Execução</router-link>
       </nav>
 
       <div class="user-menu" @click="toggleDropdown">
         <div class="user-info">
-          <span>{{ userStore.nome }}</span>
+          <span>{{ userData.nome }}</span>
         </div>
         <ul v-if="dropdownOpen" class="dropdown">
           <li><a class="link" @click.prevent="preferenciaModal=true">Preferências</a></li>
@@ -30,19 +30,26 @@
 </template>
 
 <script>
-import { auth } from '../firebaseConfig.js'
+import { auth, db } from '../firebaseConfig.js'
+import { doc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth'
 import logo from '@/assets/icons/logo.png'
-import { useUserStore } from '../stores/user';
+import { getDoc } from 'firebase/firestore';
 
 export default {
   name: 'NavbarComponent',
-  setup() {
-    const userStore = useUserStore()
-    return { userStore }
-  },
   data() {
     return {
+      userData: {
+        id: '',
+        matricula: '',
+        nome: '',
+        email: '',
+        pending: '',
+        perfil: '',
+        roles: ''
+      },
+      PermissionsData: [],
       preferenciaModal: false,
       logo,
       dropdownOpen: false,
@@ -50,6 +57,43 @@ export default {
     }
   },
   methods: {
+    async getUserInfo(){
+      const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid))
+      if(userDoc.exists()){
+        this.userData.id = userDoc.id,
+        this.userData.matricula = userDoc.data().matricula
+        this.userData.nome = userDoc.data().nome
+        this.userData.email = userDoc.data().emai,
+        this.userData.pending = userDoc.data().pending
+        this.userData.perfil = userDoc.data().perfil
+        this.userData.roles = userDoc.data().roles
+      }
+      else{
+        signOut(auth)
+        .then(() => {
+          // Sign-out successful.
+          this.$router.push({ name: 'login' })
+          localStorage.removeItem('userData')
+        })
+        .catch((error) => {
+          console.log(error)
+          // An error happened.
+        })
+      }
+
+      localStorage.setItem('userData', JSON.stringify(this.userData))
+    },
+    clearUserInfo(){
+      this.userData = {
+        id: '',
+        matricula: '',
+        nome: '',
+        email: '',
+        pending: '',
+        perfil: '',
+        roles: ''
+      }
+    },
     toggleDropdown() {
       this.dropdownOpen = !this.dropdownOpen
     },
@@ -58,6 +102,7 @@ export default {
         .then(() => {
           // Sign-out successful.
           this.$router.push({ name: 'login' })
+          localStorage.removeItem('userData')
         })
         .catch((error) => {
           console.log(error)
@@ -68,6 +113,12 @@ export default {
       this.sidebarAberta = !this.sidebarAberta
     },
   },
+  mounted(){
+    this.getUserInfo()
+  },
+  beforeUnmount() {
+    this.clearUserInfo()
+  }
 }
 </script>
 

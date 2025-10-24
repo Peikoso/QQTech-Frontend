@@ -1,0 +1,24 @@
+.button-status {
+  width: 75px; /* largura fixa */
+  height: 40px; /* altura fixa */
+  text-align: center;
+  padding: 0 10px; /* opcional para espaçamento interno */
+  border: none;
+  border-radius: 30px;
+}
+
+.button-red {
+  background-color: #b30d14;
+}
+
+.button-red:hover {
+  background-color: #851306;
+}
+
+.button-yellow {
+  background-color: #e7ae15;
+}
+
+.button-yellow:hover {
+  background-color: #dc9018;
+}

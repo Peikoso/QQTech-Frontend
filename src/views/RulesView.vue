@@ -39,7 +39,7 @@
               <button class="icon-btn" @click="executarRegra(regra)"><img :src="regra.executar ? pause : play"></button>
               <button class="icon-btn" @click="silenciarRegra(regra)"><img :src="regra.silenciar ? volume_mute : volume_up"></button>
               <button @click="editarRegra(regra)">Editar</button>
-              <button @click="excluirRegra">Excluir</button>
+              <button @click="excluirRegra(regra)">Excluir</button>
             </td>
           </tr>
         </tbody>
@@ -150,7 +150,6 @@
           <hr>
         </form>
       </div>
-
     </div>
   </div>
 </template>
@@ -199,19 +198,19 @@ export default {
   methods: {
     salvarRegras() {
       const data = {
-        nome: this.nome,
-        descricao: this.descricao,
-        sql: this.sql,
-        banco: this.banco,
-        prioridade: this.prioridade,
-        minuto_atualizacao: this.minuto_atualizacao,
-        qtd_erro_max: this.qtd_erro_max,
-        hora_inicio: this.hora_inicio,
-        hora_final: this.hora_final,
-        roles: this.roles,
-        notificacao: this.notificacao,
-        silenciar: this.silenciar,
-        executar: this.executar
+        nome: this.regra.nome,
+        descricao: this.regra.descricao,
+        sql: this.regra.sql,
+        banco: this.regra.banco,
+        prioridade: this.regra.prioridade,
+        minuto_atualizacao: this.regra.minuto_atualizacao,
+        qtd_erro_max: this.regra.qtd_erro_max,
+        hora_inicio: this.regra.hora_inicio,
+        hora_final: this.regra.hora_final,
+        roles: this.regra.roles,
+        notificacao: this.regra.notificacao,
+        silenciar: this.regra.silenciar,
+        executar: this.regra.executar
       }
 
       if(this.modoEdicao == false){
@@ -222,7 +221,7 @@ export default {
         this.regras.push(novoData);
       }else{
         const novoData = {
-          id: this.id,
+          id: this.regra.id,
           ...data
         }
         const index = this.regras.findIndex(regra => regra.id === this.regra.id)
@@ -235,7 +234,6 @@ export default {
       this.modoEdicao = false
       this.regraModal = false
     },
-
     editarRegra(regra) {
       this.modoEdicao = true
       this.regraModal = true
@@ -255,34 +253,27 @@ export default {
       this.regra.silenciar = regra.silenciar
       this.regra.executar = regra.executar
     },
-
     silenciarRegra(regra){
       regra.silenciar = !regra.silenciar
       this.salvarLocalStorageRegras()
     },
-
     executarRegra(regra){
       regra.executar = !regra.executar
       this.salvarLocalStorageRegras()
     },
-
-    excluirRegra() {
-      const index = this.regras.findIndex(regra => regra.id === this.regra.id)
+    excluirRegra(regra) {
+      const index = this.regras.findIndex(r => r.id === regra.id)
       this.regras.splice(index, 1)
       this.salvarLocalStorageRegras()
     },
-
     carregarLocalStorageRegras() {
       const dados = JSON.parse(localStorage.getItem('regras')) || [];
 
       return dados
     },
-
     salvarLocalStorageRegras() {
       localStorage.setItem('regras', JSON.stringify(this.regras))
     },
-
-
     limparForm() {
       this.regra.id = '';
       this.regra.nome = '';

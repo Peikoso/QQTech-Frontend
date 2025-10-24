@@ -32,8 +32,8 @@
 /* Container de filtros dentro da view-container */
 .view-container .filtro-container {
   display: flex;
-  flex-wrap: wrap;       /* permite quebrar linha em telas pequenas */
-  gap: 16px;             /* espaçamento entre os selects */
+  flex-wrap: wrap; /* permite quebrar linha em telas pequenas */
+  gap: 16px; /* espaçamento entre os selects */
   margin-bottom: 20px;
   align-items: flex-end; /* alinha labels e selects na base */
 }
@@ -42,40 +42,40 @@
 .view-container .filtro-container > div {
   display: flex;
   flex-direction: column; /* label em cima do select */
-  flex: 1;                /* ocupa espaço proporcional */
-  min-width: 150px;       /* evita ficar muito estreito */
+  flex: 1; /* ocupa espaço proporcional */
+  min-width: 150px; /* evita ficar muito estreito */
 }
 
 /* Label de filtro dentro da view-container */
 .view-container .filtro-label {
-  display: inline-block;        /* fica no fluxo normal */
-  margin-bottom: 8px;           /* espaço abaixo do label */
-  padding: 4px 8px;             /* padding interno */
-  background-color: #f0f0f0;    /* fundo suave */
-  color: #333;                  /* texto escuro */
-  font-weight: 500;             /* destacado sem ser bold */
-  border-radius: 5px;           /* cantos arredondados */
-  font-size: 0.9rem;            /* tamanho de texto adequado */
+  display: inline-block; /* fica no fluxo normal */
+  margin-bottom: 8px; /* espaço abaixo do label */
+  padding: 4px 8px; /* padding interno */
+  background-color: #f0f0f0; /* fundo suave */
+  color: #333; /* texto escuro */
+  font-weight: 500; /* destacado sem ser bold */
+  border-radius: 5px; /* cantos arredondados */
+  font-size: 0.9rem; /* tamanho de texto adequado */
 }
 
 /* Input de filtro dentro da view-container */
 .view-container input#filtro {
-  width: 100%;                  /* ocupa toda a largura do container */
-  padding: 6px 10px;            /* espaçamento interno confortável */
-  margin-top: 4px;              /* pequena distância do label */
-  border: 1px solid #ccc;       /* borda leve */
-  border-radius: 5px;           /* cantos arredondados */
-  font-size: 0.9rem;            /* tamanho de texto consistente */
-  box-sizing: border-box;       /* garante que padding não aumente largura */
-  background-color: #fff;       /* fundo branco */
-  color: #333;                  /* texto escuro */
+  width: 100%; /* ocupa toda a largura do container */
+  padding: 6px 10px; /* espaçamento interno confortável */
+  margin-top: 4px; /* pequena distância do label */
+  border: 1px solid #ccc; /* borda leve */
+  border-radius: 5px; /* cantos arredondados */
+  font-size: 0.9rem; /* tamanho de texto consistente */
+  box-sizing: border-box; /* garante que padding não aumente largura */
+  background-color: #fff; /* fundo branco */
+  color: #333; /* texto escuro */
   transition: border-color 0.2s; /* efeito sutil ao focar */
 }
 
 /* Ao focar no input, muda levemente a borda */
 .view-container input#filtro:focus {
-  border-color: #24723b;        /* verde do sistema */
-  outline: none;                /* remove outline padrão do navegador */
+  border-color: #24723b; /* verde do sistema */
+  outline: none; /* remove outline padrão do navegador */
 }
 
 .view-container select {
@@ -97,7 +97,9 @@
   background-size: 10px 6px;
 
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 /* Efeito de foco */
@@ -151,17 +153,17 @@ td {
 
 /* Container de botões */
 td.actions {
-  flex-wrap: wrap;      /* permite quebrar linha */
-  gap: 5px;             /* espaço entre botões */;
+  flex-wrap: wrap; /* permite quebrar linha */
+  gap: 5px; /* espaço entre botões */
 }
 
 /* Botões dentro da célula */
 td.actions button,
 td.actions .icon-btn {
-  flex: 0 0 auto;       /* padrão desktop */
+  flex: 0 0 auto; /* padrão desktop */
   margin: 0px;
-  margin-left: 5px;            /* remove margem direita que atrapalha wrap */
-  padding: 6px 12px;    /* padding dos botões */
+  margin-left: 5px; /* remove margem direita que atrapalha wrap */
+  padding: 6px 12px; /* padding dos botões */
 }
 
 th {
@@ -174,7 +176,7 @@ tbody tr {
 }
 
 tbody tr:hover {
-  background-color: #E6F7E6;
+  background-color: #e6f7e6;
 }
 
 /* Nome + descrição como card interno */
@@ -212,19 +214,18 @@ td button:hover {
 /* Botão de ícone limpo */
 .icon-btn {
   vertical-align: middle; /* centraliza verticalmente na linha */
-  background: none;      /* sem fundo */
-  border: none;          /* sem borda */
-  cursor: pointer;         /* para alinhar a imagem */
-  align-items: center;   /* centraliza verticalmente */
+  background: none; /* sem fundo */
+  border: none; /* sem borda */
+  cursor: pointer; /* para alinhar a imagem */
+  align-items: center; /* centraliza verticalmente */
   justify-content: center; /* centraliza horizontalmente */
-  transition: none;      /* remove efeito hover */
+  transition: none; /* remove efeito hover */
   padding: 0;
 }
 
 .icon-btn:hover {
-  background: none;      /* mantém sem fundo no hover */
+  background: none; /* mantém sem fundo no hover */
 }
-
 
 /* Título e descrição do topo */
 h3:first-of-type {
@@ -399,6 +400,10 @@ textarea#sql {
 
 /* Responsivo para mobile */
 @media (max-width: 768px) {
+  .small-views {
+    display: block;
+  }
+
   .view-container {
     padding: 10px;
   }
@@ -452,5 +457,4 @@ textarea#sql {
     align-items: flex-start;
     gap: 10px;
   }
-
 }
