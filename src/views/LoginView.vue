@@ -36,6 +36,9 @@
           <router-link :to="{ name: 'senha' }" class="link" style="width: 48%; text-align: center; background-color:  #24723b;">Esqueci minha senha</router-link>
           <router-link :to="{ name: 'acesso' }" class="link" style="width: 48%; text-align: center; background-color:  #24723b;">Solicitar Acesso</router-link>
         </div>
+        <div class="form-group">
+          <button @click="anonymousLogin" class="anonymous-button">Visitante</button>
+        </div>
       </div>
     </div>
   </div>
@@ -43,12 +46,7 @@
 
 <script>
 import { db } from '../firebaseConfig.js'
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-} from 'firebase/auth'
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, signInAnonymously } from 'firebase/auth'
 import { collection, query, where, getDocs, setDoc, deleteDoc, doc } from 'firebase/firestore'
 export default {
   name: 'LoginView',
@@ -61,7 +59,6 @@ export default {
   methods: {
     async handleLogin() {
       const auth = getAuth()
-
       try {
         await signInWithEmailAndPassword(auth, this.email, this.password)
         this.$router.push({ name: 'dashboard' })
@@ -109,6 +106,11 @@ export default {
           console.error('Erro ao criar usuário ou logar: ', error.code, error.message)
         }
       }
+    },
+    async anonymousLogin() {
+      const auth = getAuth()
+      await signInAnonymously(auth)
+      this.$router.push({ name: 'dashboard' })
     },
   },
 }

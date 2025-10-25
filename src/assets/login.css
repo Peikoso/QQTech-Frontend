@@ -81,6 +81,25 @@ label {
   box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
 }
 
+.anonymous-button {
+  width: 100%;
+  padding: 14px;
+  background:  #555;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  transition: all 0.3s;
+}
+
+.anonymous-button:hover {
+  background: #666;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+}
+
 @media (max-width: 768px) {
   .login-form-container {
     padding: 1rem;

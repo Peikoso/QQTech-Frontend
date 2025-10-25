@@ -68,6 +68,15 @@ export default {
         this.userData.perfil = userDoc.data().perfil
         this.userData.roles = userDoc.data().roles
       }
+      else if(auth.currentUser.isAnonymous===true){
+        this.userData.id = 'visitante',
+        this.userData.matricula = 'visitante',
+        this.userData.nome = 'visitante',
+        this.userData.email = 'visitante',
+        this.userData.pending = 'visitante',
+        this.userData.perfil = 'viewer',
+        this.userData.roles = 'visitante'
+      }
       else{
         await signOut(auth)
         this.$router.push({ name: 'login' })
