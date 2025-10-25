@@ -6,6 +6,8 @@ import RotasView from '@/views/RotasView.vue'
 import UsersView from '../views/UsersView.vue'
 import LogsView from '../views/LogsView.vue'
 import LoginView from '../views/LoginView.vue'
+import SenhaView from '../views/SenhaView.vue'
+import AcessoView from '../views/AcessoView.vue'
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from '../firebaseConfig.js'
 
@@ -58,6 +60,16 @@ const router = createRouter({
       name: 'logs',
       component: LogsView,
       meta: { requiresAuth: true }
+    },
+    {
+      path: '/senha',
+      name: 'senha',
+      component: SenhaView
+    },
+    {
+      path: '/acesso',
+      name: 'acesso',
+      component: AcessoView
     }
   ],
 })
@@ -65,15 +77,23 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const unsubscribe = onAuthStateChanged(auth, (user) => {
-    if (to.name !== "login" && !user) {
-      next({ name: "login" });
+
+    if (!user && to.name !== "login" && to.name !== "senha" && to.name !== "acesso") {
+      unsubscribe();
+      return next({ name: "login" });
     }
-    if (to.name === "login" && user) {
-      next({ name: "dashboard" });
+
+    if (user && to.name === "login") {
+      unsubscribe();
+      return next({ name: "dashboard" });
     }
-    next();
+
     unsubscribe();
+    next();
   });
 });
+
+
+
 
 export default router

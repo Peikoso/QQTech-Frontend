@@ -32,6 +32,10 @@
             <button class="login-button">Login</button>
           </div>
         </form>
+        <div style="display: flex; justify-content: space-between; margin-top: 1rem;">
+          <router-link :to="{ name: 'senha' }" class="link" style="width: 48%; text-align: center; background-color:  #24723b;">Esqueci minha senha</router-link>
+          <router-link :to="{ name: 'acesso' }" class="link" style="width: 48%; text-align: center; background-color:  #24723b;">Solicitar Acesso</router-link>
+        </div>
       </div>
     </div>
   </div>
@@ -39,159 +43,73 @@
 
 <script>
 import { db } from '../firebaseConfig.js'
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
-import { collection, query, where, getDocs, setDoc, deleteDoc, doc } from "firebase/firestore";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth'
+import { collection, query, where, getDocs, setDoc, deleteDoc, doc } from 'firebase/firestore'
 export default {
   name: 'LoginView',
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
     }
   },
   methods: {
     async handleLogin() {
-      const auth = getAuth();
+      const auth = getAuth()
 
       try {
-        await signInWithEmailAndPassword(auth, this.email, this.password);
-        this.$router.push({ name: 'dashboard' });
+        await signInWithEmailAndPassword(auth, this.email, this.password)
+        this.$router.push({ name: 'dashboard' })
       } catch (error) {
         try {
-          const q = query(collection(db, 'users'), where('email', '==', this.email));
-          const querySnapshot = await getDocs(q);
+          const q = query(collection(db, 'users'), where('email', '==', this.email))
+          const querySnapshot = await getDocs(q)
 
-          if(querySnapshot.empty) throw new Error("Usuário não encontrado no Firestore!");
+          if (querySnapshot.empty) throw new Error('Usuário não encontrado no Firestore!')
 
           if (!querySnapshot.empty) {
-            const oldDoc = querySnapshot.docs[0];
-            const oldData = oldDoc.data();
+            const oldDoc = querySnapshot.docs[0]
+            const oldData = oldDoc.data()
 
-            const userCredential = await createUserWithEmailAndPassword(auth, this.email, this.password);
+            if(oldData.pending){
+              alert('Seu acesso ainda está pendente de aprovação.')
+              return
+            }
 
-            const uid = userCredential.user.uid;
+            const userCredential = await createUserWithEmailAndPassword(
+              auth,
+              this.email,
+              this.password,
+            )
 
-            await signOut(auth);
+            const uid = userCredential.user.uid
 
-            await deleteDoc(doc(db, 'users', oldDoc.id));
-            await setDoc(doc(db, 'users', uid), {
-              ...oldData,
-            }, { merge: true });
+            await signOut(auth)
 
-            await signInWithEmailAndPassword(auth, this.email, this.password);
-            this.$router.push({ name: 'dashboard' });
+            await deleteDoc(doc(db, 'users', oldDoc.id))
+            await setDoc(
+              doc(db, 'users', uid),
+              {
+                ...oldData,
+              },
+              { merge: true },
+            )
+
+            await signInWithEmailAndPassword(auth, this.email, this.password)
+            this.$router.push({ name: 'dashboard' })
           } else {
-            console.error('Error durante o login: ', error.code, error.message);
+            console.error('Error durante o login: ', error.code, error.message)
           }
         } catch (error) {
-          console.error('Erro ao criar usuário ou logar: ', error.code, error.message);
+          console.error('Erro ao criar usuário ou logar: ', error.code, error.message)
         }
       }
-    }
+    },
   },
 }
 </script>
-
-<style>
-.login-container {
-  min-height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  background: #f3f4f6;
-  padding: 0;
-  margin: 0;
-  position: fixed;
-  top: 0;
-  left: 0;
-  overflow-x: hidden;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  z-index: 3000;
-}
-
-.login-form-container {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-}
-
-.login-form {
-  background: white;
-  padding: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
-  width: 100%;
-  max-width: 450px;
-  transition: transform 0.3s;
-}
-
-.form-title {
-  color: #333;
-  font-size: 1.8rem;
-  font-weight: 600;
-  margin: 0 0 10px 0;
-  text-align: center;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 0.9rem;
-  color: #555;
-  font-weight: 500;
-}
-
-.form-input {
-  width: 100%;
-  padding: 12px 12px 12px 40px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  font-size: 1rem;
-  transition: all 0.3s;
-}
-
-.login-button {
-  width: 100%;
-  padding: 14px;
-  background: #1B5E20;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 1.5rem;
-  transition: all 0.3s;
-}
-
-.login-button:hover {
-  background: #388E3C;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
-}
-
-
-@media (max-width: 768px) {
-  .login-form-container {
-    padding: 1rem;
-  }
-
-  .login-form {
-    padding: 1.5rem;
-  }
-
-  .form-title {
-    font-size: 1.5rem;
-  }
-
-  .form-subtitle {
-    font-size: 0.9rem;
-  }
-}
-</style>

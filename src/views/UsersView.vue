@@ -30,6 +30,7 @@
               <button v-if="!user.pending" @click="editarUser(user)">Editar</button>
               <button v-if="!user.pending" @click="deleteUser(user)">Deletar</button>
               <button v-if="user.pending" @click="aprovarUser(user)">Aprovar</button>
+              <button v-if="user.pending" @click="deleteUser(user)">Rejeitar</button>
             </td>
           </tr>
         </tbody>
@@ -40,19 +41,19 @@
         <button class="close-btn" @click="novoUsuarioModal = false; modoEdicao = false; this.limparForm()">&times;</button>
         <form @submit.prevent="createUser">
           <label for="matricula">Matricula</label>
-          <input type="text" uid="matricula" placeholder="Ex.: 203102" v-model="user.matricula">
+          <input type="text" id="matricula" placeholder="Ex.: 203102" v-model="user.matricula">
 
           <label for="nome">Nome</label>
-          <input type="text" uid="nome" placeholder="Ex.: João Martins" v-model="user.nome">
+          <input type="text" id="nome" placeholder="Ex.: João Martins" v-model="user.nome">
 
           <label for="email">Email</label>
-          <input type="email" uid="email" placeholder="Ex.: user@example.com" v-model="user.email" :disabled="modoEdicao">
+          <input type="email" id="email" placeholder="Ex.: user@example.com" v-model="user.email" :disabled="modoEdicao">
 
           <label for="roles">Roles (separados por vírgula)</label>
-          <input type="text" uid="roles" placeholder="ex.: CANAIS_DIGITAIS" v-model="user.roles">
+          <input type="text" id="roles" placeholder="ex.: CANAIS_DIGITAIS" v-model="user.roles">
 
           <label for="perfil">Perfil</label>
-          <select uid="perfil" v-model="user.perfil">
+          <select id="perfil" v-model="user.perfil">
             <option value="admin">Admin</option>
             <option value="operator">Operator</option>
             <option value="viewer">Viewer</option>
@@ -176,6 +177,11 @@ export default {
     },
     async deleteUser(user) {
       await deleteDoc(doc(db, 'users', user.uid))
+    },
+    async aprovarUser(user) {
+      await setDoc(doc(db, 'users', user.uid),{
+        pending: false,
+      }, {merge: true})
     },
   },
   mounted() {

@@ -115,7 +115,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style src="@/assets/link.css"></style>
+
+<style>
 .sidebar {
   width: 220px;
   height: 100vh;
@@ -139,26 +141,6 @@ export default {
 .logo {
   font-size: 1.5rem;
   margin-bottom: 2rem;
-}
-
-.link {
-  display: block;
-  color: #cbd5e1;
-  text-decoration: none;
-  margin: 0.5rem 0;
-  padding: 0.5rem;
-  border-radius: 8px;
-  transition: 0.2s;
-}
-
-.link:hover {
-  background-color: #20512e;
-  color: #fff;
-}
-
-.ativo {
-  background-color: #2E7D32;
-  color: white;
 }
 
 .user-menu {

@@ -206,6 +206,3 @@ export default{
   }
 }
 </script>
-
-<style src="@/assets/styles.css"></style>
-<style src="@/assets/button_status.css"></style>
