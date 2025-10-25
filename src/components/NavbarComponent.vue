@@ -9,11 +9,31 @@
       <h2 class="logo">Plantão Monitor</h2>
       <nav>
         <router-link :to="{name: 'dashboard'}" class="link" active-class="ativo">Dashboard</router-link>
-        <router-link :to="{name: 'incidentes'}" class="link" active-class="ativo">Incidentes</router-link>
-        <router-link :to="{name: 'rules' }" class="link" active-class="ativo">Regras</router-link>
-        <router-link :to="{name: 'rota'}" class="link" active-class="ativo">Gestão de Rota</router-link>
-        <router-link :to="{name: 'users'}" class="link" active-class="ativo">Usuários</router-link>
-        <router-link :to="{name: 'logs'}" class="link" active-class="ativo">Logs de Execução</router-link>
+        <router-link
+          v-if="!(userData.perfil==='viewer')"
+          :to="{name: 'incidentes'}" class="link" active-class="ativo">
+          Incidentes
+        </router-link>
+        <router-link
+          v-if="!(userData.perfil==='viewer')"
+          :to="{name: 'rules' }" class="link" active-class="ativo">
+          Regras
+        </router-link>
+        <router-link
+          v-if="userData.perfil==='admin'"
+          :to="{name: 'rota'}" class="link" active-class="ativo">
+          Gestão de Rota
+        </router-link>
+        <router-link
+          v-if="userData.perfil==='admin'"
+          :to="{name: 'users'}" class="link" active-class="ativo">
+          Usuários
+        </router-link>
+        <router-link
+          v-if="!(userData.perfil==='viewer')"
+          :to="{name: 'logs'}" class="link" active-class="ativo">
+          Logs de Execução
+        </router-link>
       </nav>
 
       <div class="user-menu" @click="toggleDropdown">
@@ -21,7 +41,7 @@
           <span>{{ userData.nome }}</span>
         </div>
         <ul v-if="dropdownOpen" class="dropdown">
-          <li><a class="link" @click.prevent="preferenciaModal=true">Preferências</a></li>
+          <li v-if="!(userData.perfil==='viewer')"><a class="link" @click.prevent="preferenciaModal=true">Preferências</a></li>
           <li><a class="link" @click.prevent="logout">Sair</a></li>
         </ul>
       </div>
