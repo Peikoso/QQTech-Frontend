@@ -83,8 +83,8 @@ export default {
           } else {
             console.error('Error durante o login: ', error.code, error.message);
           }
-        } catch (innerError) {
-          console.error('Erro ao criar usuário ou logar: ', innerError.code, innerError.message);
+        } catch (error) {
+          console.error('Erro ao criar usuário ou logar: ', error.code, error.message);
         }
       }
     }
