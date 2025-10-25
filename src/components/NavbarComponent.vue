@@ -63,22 +63,15 @@ export default {
         this.userData.id = userDoc.id,
         this.userData.matricula = userDoc.data().matricula
         this.userData.nome = userDoc.data().nome
-        this.userData.email = userDoc.data().emai,
+        this.userData.email = userDoc.data().email
         this.userData.pending = userDoc.data().pending
         this.userData.perfil = userDoc.data().perfil
         this.userData.roles = userDoc.data().roles
       }
       else{
-        signOut(auth)
-        .then(() => {
-          // Sign-out successful.
-          this.$router.push({ name: 'login' })
-          localStorage.removeItem('userData')
-        })
-        .catch((error) => {
-          console.log(error)
-          // An error happened.
-        })
+        await signOut(auth)
+        this.$router.push({ name: 'login' })
+        localStorage.removeItem('userData')
       }
 
       localStorage.setItem('userData', JSON.stringify(this.userData))
