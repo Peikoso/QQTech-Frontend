@@ -39,7 +39,7 @@
 
 <script>
 import { db } from '../firebaseConfig.js'
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword  } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { collection, query, where, getDocs, setDoc, deleteDoc, doc } from "firebase/firestore";
 export default {
   name: 'LoginView',
@@ -70,6 +70,8 @@ export default {
             const userCredential = await createUserWithEmailAndPassword(auth, this.email, this.password);
 
             const uid = userCredential.user.uid;
+
+            await signOut(auth);
 
             await deleteDoc(doc(db, 'users', oldDoc.id));
             await setDoc(doc(db, 'users', uid), {
