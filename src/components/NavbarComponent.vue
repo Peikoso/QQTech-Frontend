@@ -62,7 +62,7 @@
       </div>
     </aside>
 
-    <div class="modal" v-if="preferenciaModal">
+    <div class="modal" v-if="preferenciaModal" style="z-index: 2000;">
       <div class="modal-content">
         <button class="close-btn" @click="preferenciaModal = false">&times;</button>
         <h2>Preferências</h2>
