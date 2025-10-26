@@ -20,9 +20,19 @@
           Regras
         </router-link>
         <router-link
+          v-if="userData.perfil==='admin'"
+          :to="{name: 'runners'}" class="link" active-class="ativo">
+          Runners
+        </router-link>
+        <router-link
           v-if="!(userData.perfil==='viewer')"
           :to="{name: 'logs'}" class="link" active-class="ativo">
           Logs de Execução
+        </router-link>
+        <router-link
+          v-if="!(userData.perfil==='viewer')"
+          :to="{name: 'relatorios'}" class="link" active-class="ativo">
+          Relatórios e Métricas
         </router-link>
         <router-link
           v-if="userData.perfil==='admin'"
@@ -38,11 +48,6 @@
           v-if="userData.perfil==='admin'"
           :to="{name: 'perfil'}" class="link" active-class="ativo">
           Gestão de Perfils
-        </router-link>
-        <router-link
-          v-if="userData.perfil==='admin'"
-          :to="{name: 'runners'}" class="link" active-class="ativo">
-          Runners
         </router-link>
       </nav>
 

@@ -1,0 +1,19 @@
+.mensagem-salvo {
+  background-color: #269447;   /* cor de fundo */
+  color: white;                 /* texto branco */
+  margin: 20px 0;              /* espaçamento externo */
+  padding: 12px 20px;           /* espaçamento interno */
+  border-radius: 6px;           /* cantos arredondados */
+  font-weight: 500;             /* texto um pouco mais forte */
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2); /* sombra leve */
+  animation: fadeOut 3s forwards; /* some depois de 3s */
+  align-self: center;           /* centraliza no flex container */
+}
+
+/* animação opcional para sumir */
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; display: none; }
+}

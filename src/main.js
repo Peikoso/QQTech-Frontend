@@ -7,6 +7,7 @@ import '@/assets/button_status.css'
 import '@/assets/link.css'
 import '@/assets/login.css'
 import '@/assets/navbar.css'
+import '@/assets/saveMessage.css'
 
 initMocks()
 
