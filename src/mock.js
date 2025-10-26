@@ -83,67 +83,86 @@ export function initMocks() {
   ]
 
   const incidentesMock = [
-    {
-      id: 'inc-0001',
-      regra_id: '1a2b3c4d-0001',
-      user_id_ack: '',
-      user_id_closed: '',
-      status: 'open',
-      comentario_ack: '',
-      comentario_closed: '',
-      created_at: '2025-10-23 09:15',
-      ack_at: '',
-      closed_at: '',
-    },
-    {
-      id: 'inc-0002',
-      regra_id: '1a2b3c4d-0002',
-      user_id_ack: 'user-002',
-      user_id_closed: '',
-      status: 'ack',
-      comentario_ack: 'Equipe de infraestrutura informada',
-      comentario_closed: '',
-      created_at: '2025-10-23 08:45',
-      ack_at: '2025-10-23 08:50',
-      closed_at: '',
-    },
-    {
-      id: 'inc-0003',
-      regra_id: '1a2b3c4d-0003',
-      user_id_ack: 'user-003',
-      user_id_closed: 'user-003',
-      status: 'closed',
-      comentario_ack: 'Problema resolvido após ajuste no servidor',
-      comentario_closed: 'Problema resolvido após ajuste no servidor',
-      created_at: '2025-10-22 16:20',
-      ack_at: '2025-10-22 16:25',
-      closed_at: '2025-10-22 17:00',
-    },
-    {
-      id: 'inc-0004',
-      regra_id: '1a2b3c4d-0004',
-      user_id_ack: '',
-      user_id_closed: '',
-      status: 'open',
-      comentario_ack: '',
-      comentario_closed: '',
-      created_at: '2025-10-23 10:00',
-      ack_at: '',
-      closed_at: '',
-    },
-    {
-      id: 'inc-0005',
-      regra_id: '1a2b3c4d-0005',
-      user_id_ack: 'user-005',
-      user_id_closed: '',
-      status: 'ack',
-      comentario_ack: 'Verificar processos ativos',
-      comentario_closed: '',
-      created_at: '2025-10-23 07:30',
-      ack_at: '2025-10-23 07:35',
-      closed_at: '',
-    },
-  ]
+  {
+    id: 'inc-0001',
+    regra_id: '1a2b3c4d-0001',
+    user_id_ack: '',
+    user_id_closed: '',
+    status: 'open',
+    comentario_ack: '',
+    comentario_closed: '',
+    created_at: '2025-10-23 09:15',
+    ack_at: '',
+    closed_at: '',
+    logs: [
+      { id: 'log-0001', incidente_id: 'inc-0001', time: '2025-10-23 09:15', message: 'Incidente criado' }
+    ],
+  },
+  {
+    id: 'inc-0002',
+    regra_id: '1a2b3c4d-0002',
+    user_id_ack: 'user-002',
+    user_id_closed: '',
+    status: 'ack',
+    comentario_ack: 'Equipe de infraestrutura informada',
+    comentario_closed: '',
+    created_at: '2025-10-23 08:45',
+    ack_at: '2025-10-23 08:50',
+    closed_at: '',
+    logs: [
+      { id: 'log-0002', incidente_id: 'inc-0002', time: '2025-10-23 08:45', message: 'Incidente criado' },
+      { id: 'log-0003', incidente_id: 'inc-0002', time: '2025-10-23 08:50', message: 'Incidente reconhecido por user-002' }
+    ],
+  },
+  {
+    id: 'inc-0003',
+    regra_id: '1a2b3c4d-0003',
+    user_id_ack: 'user-003',
+    user_id_closed: 'user-003',
+    status: 'closed',
+    comentario_ack: 'Problema resolvido após ajuste no servidor',
+    comentario_closed: 'Problema resolvido após ajuste no servidor',
+    created_at: '2025-10-22 16:20',
+    ack_at: '2025-10-22 16:25',
+    closed_at: '2025-10-22 17:00',
+    logs: [
+      { id: 'log-0004', incidente_id: 'inc-0003', time: '2025-10-22 16:20', message: 'Incidente criado' },
+      { id: 'log-0005', incidente_id: 'inc-0003', time: '2025-10-22 16:25', message: 'Incidente reconhecido por user-003' },
+      { id: 'log-0006', incidente_id: 'inc-0003', time: '2025-10-22 17:00', message: 'Incidente fechado por user-003' }
+    ],
+  },
+  {
+    id: 'inc-0004',
+    regra_id: '1a2b3c4d-0004',
+    user_id_ack: '',
+    user_id_closed: '',
+    status: 'open',
+    comentario_ack: '',
+    comentario_closed: '',
+    created_at: '2025-10-23 10:00',
+    ack_at: '',
+    closed_at: '',
+    logs: [
+      { id: 'log-0007', incidente_id: 'inc-0004', time: '2025-10-23 10:00', message: 'Incidente criado' }
+    ],
+  },
+  {
+    id: 'inc-0005',
+    regra_id: '1a2b3c4d-0005',
+    user_id_ack: 'user-005',
+    user_id_closed: '',
+    status: 'ack',
+    comentario_ack: 'Verificar processos ativos',
+    comentario_closed: '',
+    created_at: '2025-10-23 07:30',
+    ack_at: '2025-10-23 07:35',
+    closed_at: '',
+    logs: [
+      { id: 'log-0008', incidente_id: 'inc-0005', time: '2025-10-23 07:30', message: 'Incidente criado' },
+      { id: 'log-0009', incidente_id: 'inc-0005', time: '2025-10-23 07:35', message: 'Incidente reconhecido por user-005' }
+    ],
+  },
+];
 
   localStorage.setItem('regras', JSON.stringify(regrasMock))
   localStorage.setItem('incidentes', JSON.stringify(incidentesMock))

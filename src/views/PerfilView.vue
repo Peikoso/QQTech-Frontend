@@ -170,6 +170,34 @@ export default {
       if (this.perfil.routeControl) {
         this.perfil.routeAccess = true;
       }
+    },
+    perfilValues(){
+      if (this.perfil.name === 'viewer') {
+        this.perfil.dashboardAccess = false;
+        this.perfil.dashboardControl = false;
+        this.perfil.incidentAccess = false;
+        this.perfil.incidentControl = false;
+        this.perfil.ruleAccess = false;
+        this.perfil.ruleControl = false;
+        this.perfil.routeAccess = false;
+        this.perfil.routeControl = false;
+      }
+      if(this.perfil.name === 'operator'){
+        this.perfil.dashboardAccess = true;
+        this.perfil.dashboardControl = true;
+        this.perfil.incidentAccess = true;
+        this.perfil.incidentControl = true;
+        this.perfil.ruleAccess = true;
+        this.perfil.routeAccess = true;
+      }
+    }
+  },
+  mounted() {
+    this.perfilValues();
+  },
+  watch: {
+    'perfil.name'() {
+      this.perfilValues();
     }
   }
 };

@@ -62,7 +62,6 @@
           </tbody>
         </table>
       </div>
-
     </div>
 
     <div class="modal" v-if="incidenteModal">
@@ -86,6 +85,25 @@
         <br/>
         <div class="modal-details">
           <h2>Logs do Incidente</h2>
+          <div class="table-responsive">
+            <p v-if="incidente.logs.length == 0"><strong>Nenhum Log Registrado</strong></p>
+            <table  v-if="incidente.logs.length >= 1">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Tempo</th>
+                  <th>Log</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="log in incidente.logs" :key="log.id">
+                  <td data-label="ID">{{ log.id }}</td>
+                  <td data-label="Tempo">{{ log.time }} minutos</td>
+                  <td data-label="Log">{{ log.message }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -116,7 +134,6 @@
           <button @click="reexecuteModal = false">Não</button>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -137,6 +154,13 @@ export default {
         created_at: '',
         ack_at: '',
         closed_at: '',
+        logs: [],
+      },
+      log: {
+        id: '',
+        incidente_id: '',
+        time: '',
+        message: '',
       },
       novoComentario: '',
       incidentes: [],
@@ -164,6 +188,7 @@ export default {
       this.incidente.created_at = incidente.created_at
       this.incidente.ack_at = incidente.ack_at
       this.incidente.closed_at = incidente.closed_at
+      this.incidente.logs = incidente.logs || []
     },
 
     statusIncidente(incidente) {
@@ -177,6 +202,7 @@ export default {
       this.incidente.created_at = incidente.created_at
       this.incidente.ack_at = incidente.ack_at
       this.incidente.closed_at = incidente.closed_at
+      this.incidente.logs = incidente.logs || []
 
       if (this.incidente.status === 'closed') {
         this.reexecuteModal = true
@@ -222,6 +248,7 @@ export default {
           created_at: this.incidente.created_at,
           ack_at: this.incidente.ack_at,
           closed_at: new Date(),
+          logs: this.incidente.logs,
         }
       }
 
@@ -237,6 +264,7 @@ export default {
           created_at: this.incidente.created_at,
           ack_at: new Date(),
           closed_at: this.incidente.closed_at,
+          logs: this.incidente.logs,
         }
       }
 
@@ -259,6 +287,7 @@ export default {
       this.incidente.ack_at = ''
       this.incidente.closed_at = ''
       this.novoComentario = ''
+      this.incidente.logs = []
     },
     reexecuteIncidente() {
       const index = this.regras.findIndex((r) => r.id === this.incidente.regra_id)
@@ -272,6 +301,7 @@ export default {
   },
   mounted() {
     this.carregarLocalStorage()
+    console.log(this.incidentes)
   },
 }
 </script>
