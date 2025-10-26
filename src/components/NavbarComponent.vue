@@ -20,19 +20,29 @@
           Regras
         </router-link>
         <router-link
+          v-if="!(userData.perfil==='viewer')"
+          :to="{name: 'logs'}" class="link" active-class="ativo">
+          Logs de Execução
+        </router-link>
+        <router-link
           v-if="userData.perfil==='admin'"
           :to="{name: 'rota'}" class="link" active-class="ativo">
-          Gestão de Rota
+          Gestão de Rotas
         </router-link>
         <router-link
           v-if="userData.perfil==='admin'"
           :to="{name: 'users'}" class="link" active-class="ativo">
-          Usuários
+          Gestão de Usuários
         </router-link>
         <router-link
-          v-if="!(userData.perfil==='viewer')"
-          :to="{name: 'logs'}" class="link" active-class="ativo">
-          Logs de Execução
+          v-if="userData.perfil==='admin'"
+          :to="{name: 'perfil'}" class="link" active-class="ativo">
+          Gestão de Perfils
+        </router-link>
+        <router-link
+          v-if="userData.perfil==='admin'"
+          :to="{name: 'runners'}" class="link" active-class="ativo">
+          Runners
         </router-link>
       </nav>
 
@@ -245,111 +255,3 @@ export default {
   }
 }
 </script>
-
-<style src="@/assets/link.css"></style>
-
-<style>
-.sidebar {
-  width: 220px;
-  height: 100vh;
-  background-color: #269447;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  padding: 1rem;
-  transition: transform 0.3s ease;
-}
-
-.sidebar.fechada {
-  position: fixed;
-  left: 0;
-  top: 0;
-  transform: translateX(-100%);
-  transition: transform 0.3s ease;
-}
-
-.logo {
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.user-menu {
-  margin-top: auto;
-  position: relative;
-  cursor: pointer;
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 8px;
-  transition: 0.2s;
-}
-
-.user-info:hover {
-  background-color: #20512e;
-}
-
-.avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-}
-
-.dropdown {
-  position: absolute;
-  bottom: 3rem;
-  left: 0;
-  background-color: #269447;
-  border: 1px solid #2E7D32;
-  border-radius: 8px;
-  width: 100%;
-  list-style: none;
-  padding: 0.5rem 0;
-  z-index: 10;
-}
-
-.dropdown li a {
-  display: block;
-  padding: 0.5rem 1rem;
-  color: #cbd5e1;
-  text-decoration: none;
-}
-
-.dropdown li a:hover {
-  background-color: #20512e;
-  color: white;
-}
-
-.side-button {
-  margin: 0px;
-  position: fixed;
-  background-color: #269447;
-  color: white;
-  border: none;
-  border-radius: 0 8px 8px 0;
-  cursor: pointer;
-  padding: 0.6rem 0.8rem;
-  font-size: 1.2rem;
-  z-index: 1000;
-  transition: background-color 0.3s ease, left 0.3s ease;
-}
-
-.sidebar-aberta .side-button {
-  left: 220px;
-}
-
-.side-button:hover {
-  background-color: #20512e;
-}
-
-@media (max-width: 768px){
-  .side-button{
-    margin: 0;
-  }
-}
-
-</style>

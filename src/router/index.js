@@ -8,6 +8,8 @@ import LogsView from '../views/LogsView.vue'
 import LoginView from '../views/LoginView.vue'
 import SenhaView from '../views/SenhaView.vue'
 import AcessoView from '../views/AcessoView.vue'
+import PerfilView from '../views/PerfilView.vue'
+import RunnersView from '../views/RunnersView.vue'
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from '../firebaseConfig.js'
 
@@ -19,6 +21,16 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView
+    },
+    {
+      path: '/senha',
+      name: 'senha',
+      component: SenhaView
+    },
+    {
+      path: '/acesso',
+      name: 'acesso',
+      component: AcessoView
     },
     {
       path: '/',
@@ -62,15 +74,17 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/senha',
-      name: 'senha',
-      component: SenhaView
+      path: '/perfil',
+      name: 'perfil',
+      component: PerfilView,
+      meta: { requiresAuth: true }
     },
     {
-      path: '/acesso',
-      name: 'acesso',
-      component: AcessoView
-    }
+      path: '/runners',
+      name: 'runners',
+      component: RunnersView,
+      meta: { requiresAuth: true }
+    },
   ],
 })
 
