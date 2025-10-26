@@ -8,33 +8,35 @@
       <button @click="novoUsuarioModal = true">Novo Usuário</button>
     </div>
     <div class="view-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Matricula</th>
-            <th>Roles</th>
-            <th>Perfil</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="user in users" :key="user.uid">
-            <td>{{ user.nome }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.matricula }}</td>
-            <td>{{ user.roles }}</td>
-            <td>{{ user.perfil }}</td>
-            <td>
-              <button v-if="!user.pending" @click="editarUser(user)">Editar</button>
-              <button v-if="!user.pending" @click="deleteUser(user)">Deletar</button>
-              <button v-if="user.pending" @click="aprovarUser(user)">Aprovar</button>
-              <button v-if="user.pending" @click="deleteUser(user)">Rejeitar</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Matricula</th>
+              <th>Roles</th>
+              <th>Perfil</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="user in users" :key="user.uid">
+              <td data-label="Nome">{{ user.nome }}</td>
+              <td data-label="Email">{{ user.email }}</td>
+              <td data-label="Matricula">{{ user.matricula }}</td>
+              <td data-label="Roles">{{ user.roles }}</td>
+              <td data-label="Perfil">{{ user.perfil }}</td>
+              <td class="actions" data-label="Ações">
+                <button v-if="!user.pending" @click="editarUser(user)">Editar</button>
+                <button v-if="!user.pending" @click="deleteUser(user)">Deletar</button>
+                <button v-if="user.pending" @click="aprovarUser(user)">Aprovar</button>
+                <button v-if="user.pending" @click="deleteUser(user)">Rejeitar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="modal" v-if="novoUsuarioModal">
       <div class="modal-content">

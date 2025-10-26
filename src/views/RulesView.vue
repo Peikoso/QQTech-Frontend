@@ -15,35 +15,37 @@
         <label class="filtro-label" for="filtro">Filtrar Regras</label>
         <input type="text" id="filtro" v-model="filtro" placeholder="Digite o nome da regra">
       </div>
-      <h2 v-if="regras.length == 0">Nenhuma Regra Registrada </h2>
-      <table  v-if="regras.length >= 1">
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Banco</th>
-            <th>Intervalo</th>
-            <th>Prioridade</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="regra in regras" :key="regra.id">
-            <td>
-              <h3>{{ regra.nome }}</h3>
-              <p>{{ regra.descricao }}</p>
-            </td>
-            <td>{{ regra.banco }}</td>
-            <td>{{ regra.minuto_atualizacao }} minutos</td>
-            <td>{{ regra.prioridade }}</td>
-            <td class="actions">
-              <button class="icon-btn" @click="executarRegra(regra)"><img :src="regra.executar ? pause : play"></button>
-              <button class="icon-btn" @click="silenciarRegra(regra)"><img :src="regra.silenciar ? volume_mute : volume_up"></button>
-              <button @click="editarRegra(regra)">Editar</button>
-              <button @click="excluirRegra(regra)">Excluir</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <h2 v-if="regras.length == 0">Nenhuma Regra Registrada </h2>
+        <table  v-if="regras.length >= 1">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Banco</th>
+              <th>Intervalo</th>
+              <th>Prioridade</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="regra in regras" :key="regra.id">
+              <td class="regra-nome-descricao">
+                <h4>{{ regra.nome }}</h4>
+                <p>{{ regra.descricao }}</p>
+              </td>
+              <td data-label="Banco">{{ regra.banco }}</td>
+              <td data-label="Intervalo">{{ regra.minuto_atualizacao }} minutos</td>
+              <td data-label="Prioridade">{{ regra.prioridade }}</td>
+              <td data-label="Ações" class="actions">
+                <button class="icon-btn" @click="executarRegra(regra)"><img :src="regra.executar ? pause : play"></button>
+                <button class="icon-btn" @click="silenciarRegra(regra)"><img :src="regra.silenciar ? volume_mute : volume_up"></button>
+                <button @click="editarRegra(regra)">Editar</button>
+                <button @click="excluirRegra(regra)">Excluir</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div class="modal" v-if="regraModal">

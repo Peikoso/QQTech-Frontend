@@ -141,8 +141,15 @@
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 800px; /* Garante scroll horizontal se menor que o container */
+  min-width: 600px; /* Garante scroll horizontal se menor que o container */
 }
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* scroll suave no iOS */
+}
+
 
 th,
 td {
@@ -440,21 +447,108 @@ textarea#sql {
   }
 
   td.actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px; /* espaço entre os botões */
+    text-align: center; /* centraliza botão */
+    vertical-align: middle;
+    padding: 5px;
   }
 
   td.actions button,
   td.actions .icon-btn {
-    flex: 1 1 45%; /* ocupa até metade da linha, mas se couber cabe mais */
-    min-width: 100px; /* evita ficar muito pequeno */
-    padding: 6px 8px;
+    min-width: 100px; /* tamanho mínimo */
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
   }
 
   .conteudo-container {
     flex-direction: column; /* itens em coluna no mobile */
     align-items: flex-start;
     gap: 10px;
+  }
+
+  @media (max-width: 600px) {
+    .table-responsive table,
+    .table-responsive thead,
+    .table-responsive tbody,
+    .table-responsive th,
+    .table-responsive td,
+    .table-responsive tr {
+      display: block;
+       width: 100%;
+       min-width: 250px; /* garante largura mínima */
+    }
+
+    .table-responsive thead {
+      display: none; /* esconde cabeçalho */
+    }
+
+    .table-responsive tr {
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background-color: #fff;
+      padding: 10px;
+    }
+
+    .table-responsive td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center; /* mantém label e valor alinhados verticalmente */
+      padding: 6px 10px;
+      border-bottom: 1px solid #eee;
+      min-width: 100%;
+    }
+
+    .table-responsive td:last-child {
+      border-bottom: none;
+    }
+
+    .table-responsive td::before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: #333;
+      flex: 0 0 30%; /* label ocupa 40% */
+    }
+
+    /* Botões e ações */
+    td.actions {
+      flex-direction: column; /* botões empilhados */
+      gap: 5px;
+    }
+
+    td.actions button {
+      width: 100%;
+      margin: 3px 0 0 0;
+    }
+
+    td.regra-nome-descricao {
+      display: block;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background-color: #fff;
+    }
+
+    td.regra-nome-descricao::before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: #333;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    td.regra-nome-descricao h4 {
+      margin: 0 0 3px 0;
+      font-size: 1rem;
+    }
+
+    td.regra-nome-descricao p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #555;
+    }
   }
 }

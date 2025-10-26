@@ -76,33 +76,35 @@
         <label class="filtro-label" for="filtro">Filtrar incidentes</label>
         <input type="text" id="filtro" v-model="filtro" placeholder="Pesquise por regra, status, prioridade...">
       </div>
-      <h2 v-if="incidentes.length == 0">Nenhum incidente</h2>
-      <table  v-if="incidentes.length >= 1">
-        <thead>
-          <tr>
-            <th>Regra</th>
-            <th>Prioridade</th>
-            <th>Aberta em</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="incidente in incidentes" :key="incidente.id">
-            <td>{{ regras.find(regra => regra.id === incidente.regra_id)?.nome }}</td>
-            <td>{{ regras.find(regra => regra.id === incidente.regra_id)?.prioridade  }}</td>
-            <td>{{ incidente.created_at }}</td>
-            <td style="text-align: center">
-              <button
-                class="button-status"
-                :class="buttonStatus(incidente.status)"
-                @click="mudarStatus(incidente)"
-              >
-                {{ incidente.status }}
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <h2 v-if="incidentes.length == 0">Nenhum incidente</h2>
+        <table  v-if="incidentes.length >= 1">
+          <thead>
+            <tr>
+              <th>Regra</th>
+              <th>Prioridade</th>
+              <th>Aberta em</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="incidente in incidentes" :key="incidente.id">
+              <td data-label="Regra">{{ regras.find(regra => regra.id === incidente.regra_id)?.nome }}</td>
+              <td data-label="Prioridade">{{ regras.find(regra => regra.id === incidente.regra_id)?.prioridade  }}</td>
+              <td data-label="Aberta em">{{ incidente.created_at }}</td>
+              <td data-label="Status" class="actions" style="text-align: center">
+                <button
+                  class="button-status"
+                  :class="buttonStatus(incidente.status)"
+                  @click="mudarStatus(incidente)"
+                >
+                  {{ incidente.status }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div v-if="comentarioModal" class="modal">
       <div class="modal-content">
