@@ -52,7 +52,7 @@
               <button
                 class="button-status"
                 :class="buttonStatus(incidente.status)"
-                @click="mudarStatus(incidente)"
+                @click="statusIncidente(incidente)"
               >
                 {{ incidente.status }}
               </button>
@@ -64,7 +64,7 @@
 
     <div class="modal" v-if="incidenteModal">
       <div class="modal-content">
-        <button class="close-btn" @click="incidenteModal = false; exibirDetalhes = false">&times;</button>
+        <button class="close-btn" @click="incidenteModal = false">&times;</button>
         <div>
           <h2>Detalhes do Incidente</h2>
           <p><strong>ID do Incidente:</strong> {{ incidente.id }}</p>
@@ -78,9 +78,9 @@
           <p><strong>Ack em:</strong> {{ incidente.ack_at }}</p>
           <p><strong>Closed em:</strong> {{ incidente.closed_at }}</p>
         </div>
-        <br />
-        <hr />
-        <br />
+        <br/>
+        <hr/>
+        <br/>
         <div>
           <h2>Logs do Incidente</h2>
         </div>
@@ -89,14 +89,31 @@
 
     <div v-if="comentarioModal" class="modal">
       <div class="modal-content">
-        <button class="close-btn" @click="comentarioModal = false; this.limparIncidente()">&times;</button>
-        <form @submit.prevent="adicionarComentario()">
+        <button
+          class="close-btn"
+          @click="comentarioModal = false; this.limparIncidente()">&times;</button>
+        <form @submit.prevent="salvarComentario()">
           <label for="comentario">Comentário</label>
           <textarea id="comentario" v-model="novoComentario"></textarea>
           <br /><br />
           <button type="submit">Salvar</button>
         </form>
       </div>
+    </div>
+
+    <div v-if="reexecuteModal" class="modal">
+      <div class="modal-content">
+        <button
+          class="close-btn"
+          @click="reexecuteModal = false">&times;</button>
+        <div>
+          <h2>Reexecutar Regra</h2>
+          <p>Tem certeza que deseja reexecutar a regra?</p>
+          <button @click="reexecuteIncidente()">Sim</button>
+          <button @click="reexecuteModal = false">Não</button>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -127,11 +144,11 @@ export default {
       filtroPrioridade: '',
       incidenteModal: false,
       comentarioModal: false,
+      reexecuteModal: false,
     }
   },
   methods: {
     detalhesIncidente(incidente) {
-      this.exibirDetalhes = true
       this.incidenteModal = true
 
       this.incidente.id = incidente.id
@@ -146,6 +163,26 @@ export default {
       this.incidente.closed_at = incidente.closed_at
     },
 
+    statusIncidente(incidente) {
+      this.incidente.id = incidente.id
+      this.incidente.regra_id = incidente.regra_id
+      this.incidente.user_id_ack = incidente.user_id_ack
+      this.incidente.user_id_closed = incidente.user_id_closed
+      this.incidente.status = incidente.status
+      this.incidente.comentario_ack = incidente.comentario_ack
+      this.incidente.comentario_closed = incidente.comentario_closed
+      this.incidente.created_at = incidente.created_at
+      this.incidente.ack_at = incidente.ack_at
+      this.incidente.closed_at = incidente.closed_at
+
+      if (this.incidente.status === 'closed') {
+        this.reexecuteModal = true
+        return
+      }
+      this.comentarioModal = true
+
+    },
+
     carregarLocalStorage() {
       this.incidentes = JSON.parse(localStorage.getItem('incidentes')) || []
       this.regras = JSON.parse(localStorage.getItem('regras')) || []
@@ -154,6 +191,7 @@ export default {
 
     salvarLocalStorage() {
       localStorage.setItem('incidentes', JSON.stringify(this.incidentes))
+      localStorage.setItem('regras', JSON.stringify(this.regras))
     },
 
     buttonStatus(status) {
@@ -166,35 +204,45 @@ export default {
       }
     },
 
-    mudarStatus(incidente) {
-      if (incidente.status === 'ack' || incidente.status === 'open') {
-        this.incidente = incidente
-        this.comentarioModal = true
-      }
-    },
-    adicionarComentario() {
-      let novoIncidente = { ...this.incidente }
+    salvarComentario() {
+      let data = {}
 
-      if(novoIncidente.status === 'ack') {
-        novoIncidente.user_id_closed = this.user.id
-        novoIncidente.status = 'closed'
-        novoIncidente.comentario_closed = this.novoComentario
-        novoIncidente.closed_at = new Date()
-      }
-
-      if (novoIncidente.status === 'open') {
-        novoIncidente.user_id_ack = this.user.id
-        novoIncidente.status = 'ack'
-        novoIncidente.comentario_ack = this.novoComentario
-        novoIncidente.ack_at = new Date()
+      if (this.incidente.status === 'ack') {
+        data = {
+          id: this.incidente.id,
+          regra_id: this.incidente.regra_id,
+          user_id_ack: this.incidente.user_id_ack,
+          user_id_closed: this.user.id,
+          status: 'closed',
+          comentario_ack: this.incidente.comentario_ack,
+          comentario_closed: this.novoComentario,
+          created_at: this.incidente.created_at,
+          ack_at: this.incidente.ack_at,
+          closed_at: new Date(),
+        }
       }
 
-      const index = this.incidentes.findIndex(incidente => incidente.id === novoIncidente.id)
-      this.incidentes[index] = novoIncidente
+      if (this.incidente.status === 'open') {
+        data = {
+          id: this.incidente.id,
+          regra_id: this.incidente.regra_id,
+          user_id_ack: this.user.id,
+          user_id_closed: this.incidente.user_id_closed,
+          status: 'ack',
+          comentario_ack: this.novoComentario,
+          comentario_closed: this.incidente.comentario_closed,
+          created_at: this.incidente.created_at,
+          ack_at: new Date(),
+          closed_at: this.incidente.closed_at,
+        }
+      }
 
-      this.comentarioModal = false
+      const index = this.incidentes.findIndex((i) => i.id === this.incidente.id)
+      this.incidentes[index] = data
+
       this.salvarLocalStorage()
       this.limparIncidente()
+      this.comentarioModal = false
     },
     limparIncidente() {
       this.incidente.id = ''
@@ -208,6 +256,15 @@ export default {
       this.incidente.ack_at = ''
       this.incidente.closed_at = ''
       this.novoComentario = ''
+    },
+    reexecuteIncidente() {
+      const index = this.regras.findIndex((r) => r.id === this.incidente.regra_id)
+      const regra = this.regras[index]
+      regra.executar = true
+      this.regras[index] = regra
+
+      this.salvarLocalStorage()
+      this.reexecuteModal = false
     },
   },
   mounted() {
