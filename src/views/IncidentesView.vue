@@ -156,12 +156,6 @@ export default {
         closed_at: '',
         logs: [],
       },
-      log: {
-        id: '',
-        incidente_id: '',
-        time: '',
-        message: '',
-      },
       novoComentario: '',
       incidentes: [],
       regras: [],
