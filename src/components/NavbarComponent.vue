@@ -41,17 +41,88 @@
           <span>{{ userData.nome }}</span>
         </div>
         <ul v-if="dropdownOpen" class="dropdown">
-          <li v-if="!(userData.perfil==='viewer')"><a class="link" @click.prevent="preferenciaModal=true">Preferências</a></li>
+          <li v-if="!(userData.perfil==='viewer')"><a class="link" @click="preferenciaModal=true">Preferências</a></li>
           <li><a class="link" @click.prevent="logout">Sair</a></li>
         </ul>
       </div>
     </aside>
+
+    <div class="modal" v-if="preferenciaModal">
+      <div class="modal-content">
+        <button class="close-btn" @click="preferenciaModal = false">&times;</button>
+        <h2>Preferências</h2>
+        <form @submit.prevent="salvarPreferencias">
+          <div class="switch-container">
+            <span class="switch-label">Notificações de Push</span>
+            <label class="switch">
+              <input type="checkbox" v-model="preferencia.enablePush">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="switch-container">
+            <span class="switch-label">Notificações Sonoras de Push</span>
+            <label class="switch">
+              <input type="checkbox" v-model="preferencia.pushSound">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <br>
+          <h5 style="text-align: center;">Horário de Silêncio</h5>
+          <div class="row">
+            <div class="col">
+              <label for="hora_inicio">Hora Início</label>
+              <input type="time" id="hora_inicio" v-model="preferencia.startTime">
+            </div>
+            <div class="col">
+              <label for="hora_final">Hora Final</label>
+              <input type="time" id="hora_final" v-model="preferencia.endTime">
+            </div>
+          </div>
+          <br>
+          <h5 style="text-align: center;">Canais de Notificação</h5>
+          <div class="row">
+            <div class="col">
+              <div class="switch-container">
+                <span class="switch-label">Email</span>
+                <label class="switch">
+                  <input type="checkbox" v-model="preferencia.enableEmail">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="switch-container">
+                <span class="switch-label">WhatsApp</span>
+                <label class="switch">
+                  <input type="checkbox" v-model="preferencia.enableWhatsApp">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="switch-container">
+            <span class="switch-label">Slack</span>
+            <label class="switch">
+              <input type="checkbox" v-model="preferencia.enableSlack">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <button type="submit">Salvar</button>
+
+        </form>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script>
 import { auth, db } from '../firebaseConfig.js'
-import { doc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth'
 import logo from '@/assets/icons/logo.png'
 import { getDoc } from 'firebase/firestore';
@@ -69,7 +140,15 @@ export default {
         perfil: '',
         roles: ''
       },
-      PermissionsData: [],
+      preferencia: {
+        enablePush: false,
+        pushSound: false,
+        startTime: '00:00',
+        endTime: '00:00',
+        enableEmail: false,
+        enableWhatsApp: false,
+        enableSlack: false
+      },
       preferenciaModal: false,
       logo,
       dropdownOpen: false,
@@ -87,6 +166,17 @@ export default {
         this.userData.pending = userDoc.data().pending
         this.userData.perfil = userDoc.data().perfil
         this.userData.roles = userDoc.data().roles
+
+        const prefDoc = await getDoc(doc(db, 'preferences', this.userData.id))
+        if(prefDoc.exists()){
+          this.preferencia.enablePush = prefDoc.data().enablePush
+          this.preferencia.pushSound = prefDoc.data().pushSound
+          this.preferencia.startTime = prefDoc.data().startTime
+          this.preferencia.endTime = prefDoc.data().endTime
+          this.preferencia.enableEmail = prefDoc.data().enableEmail
+          this.preferencia.enableWhatsApp = prefDoc.data().enableWhatsApp
+          this.preferencia.enableSlack = prefDoc.data().enableSlack
+        }
       }
       else if(auth.currentUser.isAnonymous===true){
         this.userData.id = 'visitante',
@@ -134,6 +224,18 @@ export default {
     toggleSidebar() {
       this.sidebarAberta = !this.sidebarAberta
     },
+    async salvarPreferencias(){
+      await setDoc(doc(db, 'preferences', this.userData.id), {
+        enablePush: this.preferencia.enablePush,
+        pushSound: this.preferencia.pushSound,
+        startTime: this.preferencia.startTime,
+        endTime: this.preferencia.endTime,
+        enableEmail: this.preferencia.enableEmail,
+        enableWhatsApp: this.preferencia.enableWhatsApp,
+        enableSlack: this.preferencia.enableSlack
+      }, { merge: true })
+      this.preferenciaModal = false
+    }
   },
   mounted(){
     this.getUserInfo()

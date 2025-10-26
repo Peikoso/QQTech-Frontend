@@ -66,25 +66,25 @@
     </div>
 
     <div class="modal" v-if="incidenteModal">
-      <div class="modal-content">
-        <button class="close-btn" @click="incidenteModal = false">&times;</button>
-        <div>
+      <div class="modal-content" style="max-width: 800px;">
+        <button class="close-btn" style="top: 34px;" @click="incidenteModal = false">&times;</button>
+        <div class="modal-details">
           <h4>Detalhes do Incidente</h4>
           <p><strong>ID do Incidente:</strong> {{ incidente.id }}</p>
-          <p><strong>Regra ID:</strong> {{ incidente.regra_id }}</p>
-          <p><strong>User ID ACK:</strong> {{ incidente.user_id_ack }}</p>
-          <p><strong>User ID Closed:</strong> {{ incidente.user_id_closed }}</p>
-          <p><strong>Status:</strong> {{ incidente.status }}</p>
-          <p><strong>Comentário ACK:</strong> {{ incidente.comentario_ack }}</p>
-          <p><strong>Comentário Closed:</strong> {{ incidente.comentario_closed }}</p>
           <p><strong>Criado em:</strong> {{ incidente.created_at }}</p>
+          <p><strong>Regra ID:</strong> {{ incidente.regra_id }}</p>
+          <p><strong>Status:</strong> {{ incidente.status }}</p>
           <p><strong>Ack em:</strong> {{ incidente.ack_at }}</p>
+          <p><strong>User ID ACK:</strong> {{ incidente.user_id_ack }}</p>
+          <p><strong>Comentário ACK:</strong> {{ incidente.comentario_ack }}</p>
           <p><strong>Closed em:</strong> {{ incidente.closed_at }}</p>
+          <p><strong>User ID Closed:</strong> {{ incidente.user_id_closed }}</p>
+          <p><strong>Comentário Closed:</strong> {{ incidente.comentario_closed }}</p>
         </div>
         <br/>
         <hr/>
         <br/>
-        <div>
+        <div class="modal-details">
           <h2>Logs do Incidente</h2>
         </div>
       </div>

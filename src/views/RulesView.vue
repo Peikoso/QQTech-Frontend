@@ -34,11 +34,11 @@
                 <p>{{ regra.descricao }}</p>
               </td>
               <td data-label="Banco">{{ regra.banco }}</td>
-              <td data-label="Intervalo">{{ regra.minuto_atualizacao }} minutos</td>
+              <td data-label="Intervalo">{{ regra.minutoAtualizacao }} minutos</td>
               <td data-label="Prioridade">{{ regra.prioridade }}</td>
               <td data-label="Ações" class="actions">
                 <button class="icon-btn" @click="executarRegra(regra)"><img :src="regra.executar ? pause : play"></button>
-                <button class="icon-btn" @click="silenciarRegra(regra)"><img :src="regra.silenciar ? volume_mute : volume_up"></button>
+                <button class="icon-btn" @click="silenciarRegra(regra)"><img :src="regra.silenciar ? volumeMute : volume_up"></button>
                 <button @click="editarRegra(regra)">Editar</button>
                 <button @click="excluirRegra(regra)">Excluir</button>
               </td>
@@ -51,7 +51,7 @@
     <div class="modal" v-if="regraModal">
       <div class="modal-content">
         <button class="close-btn" @click="regraModal = false; modoEdicao = false; this.limparForm()">&times;</button>
-        <form @submit.prevent="salvarRegras">
+        <form @submit.prevent="salvarRegras()">
           <label for="nome">Nome</label>
           <input type="text" id="nome" placeholder="Nome da regra" v-model="regra.nome">
 
@@ -82,23 +82,23 @@
 
           <div class="row">
             <div class="col">
-              <label for="minuto_atualizacao">Intervalo (minutos)</label>
-              <input type="number" id="minuto_atualizacao" v-model.number="regra.minuto_atualizacao" min="0">
+              <label for="minutoAtualizacao">Intervalo (minutos)</label>
+              <input type="number" id="minutoAtualizacao" v-model.number="regra.minutoAtualizacao" min="0">
             </div>
             <div class="col">
-              <label for="qtd_erro_max">Máx. Erros</label>
-              <input type="number" id="qtd_erro_max" v-model.number="regra.qtd_erro_max" min="0">
+              <label for="qtdErroMax">Máx. Erros</label>
+              <input type="number" id="qtdErroMax" v-model.number="regra.qtdErroMax" min="0">
             </div>
           </div>
 
           <div class="row">
             <div class="col">
-              <label for="hora_inicio">Hora Início</label>
-              <input type="time" id="hora_inicio" v-model="regra.hora_inicio">
+              <label for="horaInicio">Hora Início</label>
+              <input type="time" id="horaInicio" v-model="regra.horaInicio">
             </div>
             <div class="col">
-              <label for="hora_final">Hora Final</label>
-              <input type="time" id="hora_final" v-model="regra.hora_final">
+              <label for="horaFinal">Hora Final</label>
+              <input type="time" id="horaFinal" v-model="regra.horaFinal">
             </div>
           </div>
 
@@ -160,7 +160,7 @@
 import play from '@/assets/icons/play.svg';
 import pause from '@/assets/icons/pause.svg';
 import volume_up from '@/assets/icons/volume_up.svg';
-import volume_mute from '@/assets/icons/volume_mute.svg';
+import volumeMute from '@/assets/icons/volume_mute.svg';
 
 export default {
   name: 'RulesView',
@@ -173,10 +173,10 @@ export default {
         sql: '',
         banco: 'PostgreSQL',
         prioridade: 'Média',
-        minuto_atualizacao: 0,
-        qtd_erro_max: 0,
-        hora_inicio: '00:00',
-        hora_final: '00:00',
+        minutoAtualizacao: 0,
+        qtdErroMax: 0,
+        horaInicio: '00:00',
+        horaFinal: '00:00',
         roles: '',
         notificacao: true,
         silenciar: false,
@@ -194,7 +194,7 @@ export default {
       play,
       pause,
       volume_up,
-      volume_mute
+      volumeMute
     }
   },
   methods: {
@@ -205,10 +205,10 @@ export default {
         sql: this.regra.sql,
         banco: this.regra.banco,
         prioridade: this.regra.prioridade,
-        minuto_atualizacao: this.regra.minuto_atualizacao,
-        qtd_erro_max: this.regra.qtd_erro_max,
-        hora_inicio: this.regra.hora_inicio,
-        hora_final: this.regra.hora_final,
+        minutoAtualizacao: this.regra.minutoAtualizacao,
+        qtdErroMax: this.regra.qtdErroMax,
+        horaInicio: this.regra.horaInicio,
+        horaFinal: this.regra.horaFinal,
         roles: this.regra.roles,
         notificacao: this.regra.notificacao,
         silenciar: this.regra.silenciar,
@@ -246,10 +246,10 @@ export default {
       this.regra.sql = regra.sql
       this.regra.banco = regra.banco
       this.regra.prioridade = regra.prioridade
-      this.regra.minuto_atualizacao = regra.minuto_atualizacao
-      this.regra.qtd_erro_max = regra.qtd_erro_max
-      this.regra.hora_inicio = regra.hora_inicio
-      this.regra.hora_final = regra.hora_final
+      this.regra.minutoAtualizacao = regra.minutoAtualizacao
+      this.regra.qtdErroMax = regra.qtdErroMax
+      this.regra.horaInicio = regra.horaInicio
+      this.regra.horaFinal = regra.horaFinal
       this.regra.roles = regra.roles
       this.regra.notificacao = regra.notificacao
       this.regra.silenciar = regra.silenciar
@@ -283,10 +283,10 @@ export default {
       this.regra.sql = '';
       this.regra.banco = 'PostgreSQL';
       this.regra.prioridade = 'Média';
-      this.regra.minuto_atualizacao = 0;
-      this.regra.qtd_erro_max = 0;
-      this.regra.hora_inicio = '00:00';
-      this.regra.hora_final = '00:00';
+      this.regra.minutoAtualizacao = 0;
+      this.regra.qtdErroMax = 0;
+      this.regra.horaInicio = '00:00';
+      this.regra.horaFinal = '00:00';
       this.regra.roles = '';
       this.regra.notificacao = true;
       this.regra.silenciar = false;

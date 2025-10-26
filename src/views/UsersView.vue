@@ -51,6 +51,9 @@
           <label for="email">Email</label>
           <input type="email" id="email" placeholder="Ex.: user@example.com" v-model="user.email" :disabled="modoEdicao">
 
+          <label for="telefone">Telefone</label>
+          <input type="text" id="telefone" placeholder="Ex.: (11) 91234-5678" v-model="user.telefone">
+
           <label for="roles">Roles (separados por vírgula)</label>
           <input type="text" id="roles" placeholder="ex.: CANAIS_DIGITAIS" v-model="user.roles">
 
@@ -80,6 +83,7 @@ export default {
         uid: '',
         nome: '',
         email: '',
+        telefone: '',
         matricula: '',
         perfil: 'viewer',
         roles: '',
@@ -146,6 +150,7 @@ export default {
         perfil: this.user.perfil,
         roles: this.user.roles,
         email: this.user.email,
+        telefone: this.user.telefone,
         pending: this.modoEdicao ? this.user.pending : false,
         createdAt: this.modoEdicao ? this.user.createdAt : new Date(),
       }, {merge: true})
@@ -159,6 +164,7 @@ export default {
       this.user.matricula = user.matricula
       this.user.nome = user.nome
       this.user.email = user.email
+      this.user.telefone = user.telefone
       this.user.roles = user.roles
       this.user.perfil = user.perfil
       this.user.pending = user.pending
@@ -171,6 +177,7 @@ export default {
       this.user.matricula = ''
       this.user.nome = ''
       this.user.email = ''
+      this.user.telefone = ''
       this.user.password = ''
       this.user.roles = ''
       this.user.perfil = 'viewer'
