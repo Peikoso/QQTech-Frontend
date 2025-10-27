@@ -125,6 +125,19 @@ export default{
   name: 'DashboardView',
   data(){
     return{
+      incidente: {
+        id: '',
+        regra_id: '',
+        user_id_ack: '',
+        user_id_closed: '',
+        status: '',
+        comentario_ack: '',
+        comentario_closed: '',
+        created_at: '',
+        ack_at: '',
+        closed_at: '',
+        logs: [],
+      },
       incidentes: [],
       regras: [],
       user: {},
@@ -161,33 +174,61 @@ export default{
 
     mudarStatus(incidente) {
       if (incidente.status === 'ack' || incidente.status === 'open') {
-        this.incidente = incidente
+        this.incidente.id = incidente.id
+        this.incidente.regra_id = incidente.regra_id
+        this.incidente.user_id_ack = incidente.user_id_ack
+        this.incidente.user_id_closed = incidente.user_id_closed
+        this.incidente.status = incidente.status
+        this.incidente.comentario_ack = incidente.comentario_ack
+        this.incidente.comentario_closed = incidente.comentario_closed
+        this.incidente.created_at = incidente.created_at
+        this.incidente.ack_at = incidente.ack_at
+        this.incidente.closed_at = incidente.closed_at
+        this.incidente.logs = incidente.logs
         this.comentarioModal = true
       }
     },
     adicionarComentario() {
-      let novoIncidente = { ...this.incidente }
+      let data = {}
 
-      if(novoIncidente.status === 'ack') {
-        novoIncidente.user_id_closed = this.user.id
-        novoIncidente.status = 'closed'
-        novoIncidente.comentario_closed = this.novoComentario
-        novoIncidente.closed_at = new Date()
+      if (this.incidente.status === 'ack') {
+        data = {
+          id: this.incidente.id,
+          regra_id: this.incidente.regra_id,
+          user_id_ack: this.incidente.user_id_ack,
+          user_id_closed: this.user.id,
+          status: 'closed',
+          comentario_ack: this.incidente.comentario_ack,
+          comentario_closed: this.novoComentario,
+          created_at: this.incidente.created_at,
+          ack_at: this.incidente.ack_at,
+          closed_at: new Date(),
+          logs: this.incidente.logs,
+        }
       }
 
-      if (novoIncidente.status === 'open') {
-        novoIncidente.user_id_ack = this.user.id
-        novoIncidente.status = 'ack'
-        novoIncidente.comentario_ack = this.novoComentario
-        novoIncidente.ack_at = new Date()
+      if (this.incidente.status === 'open') {
+        data = {
+          id: this.incidente.id,
+          regra_id: this.incidente.regra_id,
+          user_id_ack: this.user.id,
+          user_id_closed: this.incidente.user_id_closed,
+          status: 'ack',
+          comentario_ack: this.novoComentario,
+          comentario_closed: this.incidente.comentario_closed,
+          created_at: this.incidente.created_at,
+          ack_at: new Date(),
+          closed_at: this.incidente.closed_at,
+          logs: this.incidente.logs,
+        }
       }
 
-      const index = this.incidentes.findIndex(incidente => incidente.id === novoIncidente.id)
-      this.incidentes[index] = novoIncidente
+      const index = this.incidentes.findIndex((i) => i.id === this.incidente.id)
+      this.incidentes[index] = data
 
-      this.comentarioModal = false
       this.salvarLocalStorage()
       this.limparIncidente()
+      this.comentarioModal = false
     },
     limparIncidente() {
       this.incidente.id = ''

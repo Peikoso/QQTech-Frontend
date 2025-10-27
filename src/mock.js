@@ -15,6 +15,7 @@ export function initMocks() {
       notificacao: true,
       silenciar: false,
       executar: true,
+      data_adiar: null
     },
     {
       id: '1a2b3c4d-0002',
@@ -31,6 +32,7 @@ export function initMocks() {
       notificacao: true,
       silenciar: false,
       executar: true,
+      data_adiar: '2025-12-25'
     },
     {
       id: '1a2b3c4d-0003',
@@ -47,6 +49,7 @@ export function initMocks() {
       notificacao: true,
       silenciar: false,
       executar: false,
+      data_adiar: null
     },
     {
       id: '1a2b3c4d-0004',
@@ -63,6 +66,7 @@ export function initMocks() {
       notificacao: true,
       silenciar: false,
       executar: true,
+      data_adiar: '2025-12-05'
     },
     {
       id: '1a2b3c4d-0005',
@@ -79,6 +83,7 @@ export function initMocks() {
       notificacao: true,
       silenciar: true,
       executar: false,
+      data_adiar: null
     },
   ]
 

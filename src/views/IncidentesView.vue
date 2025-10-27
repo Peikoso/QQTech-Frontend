@@ -66,7 +66,7 @@
 
     <div class="modal" v-if="incidenteModal">
       <div class="modal-content" style="max-width: 800px;">
-        <button class="close-btn" style="top: 34px;" @click="incidenteModal = false">&times;</button>
+        <button class="close-btn" style="top: 34px;" @click="incidenteModal = false; this.$router.push({ name: this.$route.name, query: {} })">&times;</button>
         <div class="modal-details">
           <h4>Detalhes do Incidente</h4>
           <p><strong>ID do Incidente:</strong> {{ incidente.id }}</p>
@@ -295,7 +295,23 @@ export default {
   },
   mounted() {
     this.carregarLocalStorage()
-    console.log(this.incidentes)
+    const incidenteId = this.$route.query.incidenteId
+    if (incidenteId) {
+      const incidente = this.incidentes.find(i => i.id == incidenteId)
+      if (incidente) {
+        this.detalhesIncidente(incidente)
+      }
+    }
   },
+  watch: {
+  '$route.query.incidenteId'(novoId) {
+    if (novoId) {
+      const incidente = this.incidentes.find(i => i.id == novoId)
+      if (incidente) {
+        this.detalhesIncidente(incidente)
+      }
+    }
+  }
+},
 }
 </script>

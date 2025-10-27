@@ -126,7 +126,7 @@
             </div>
             <div class="col">
               <div class="switch-container">
-                <span class="switch-label">Executar</span>
+                <span class="switch-label">Ativa</span>
                 <label class="switch">
                   <input type="checkbox" v-model="regra.executar">
                   <span class="slider"></span>
@@ -134,6 +134,10 @@
               </div>
             </div>
           </div>
+
+          <label for="data_adiar">Programar Adiamento</label>
+          <input type="date" id="data_adiar" placeholder="DD/MM/AAAA" v-model="regra.data_adiar">
+
           <button type="submit">Salvar</button>
         </form>
       </div>
@@ -180,7 +184,8 @@ export default {
         roles: '',
         notificacao: true,
         silenciar: false,
-        executar: false
+        executar: false,
+        data_adiar: null
       },
       regras: [],
       filtro: '',
@@ -213,7 +218,8 @@ export default {
         roles: this.regra.roles,
         notificacao: this.regra.notificacao,
         silenciar: this.regra.silenciar,
-        executar: this.regra.executar
+        executar: this.regra.executar,
+        data_adiar: this.regra.data_adiar
       }
 
       if(this.modoEdicao == false){
@@ -255,6 +261,7 @@ export default {
       this.regra.notificacao = regra.notificacao
       this.regra.silenciar = regra.silenciar
       this.regra.executar = regra.executar
+      this.regra.data_adiar = regra.data_adiar
     },
     silenciarRegra(regra){
       regra.silenciar = !regra.silenciar
@@ -292,6 +299,7 @@ export default {
       this.regra.notificacao = true;
       this.regra.silenciar = false;
       this.regra.executar = false;
+      this.regra.data_adiar = null;
     },
     limparSandbox(){
       this.sandbox.sql = '';
