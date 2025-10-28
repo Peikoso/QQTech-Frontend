@@ -3,16 +3,13 @@
 ========================== */
 .sidebar {
   width: 220px; /* largura fixa */
-  height: 100dvh; /* ocupa toda a altura da tela */
+  height: 100vh; /* ocupa toda a altura da tela */
   background-color: #269447; /* cor de fundo */
   color: white; /* cor do texto */
   display: flex; /* layout flexível */
   flex-direction: column; /* organiza os itens verticalmente */
   padding: 1rem; /* espaçamento interno */
   transition: transform 0.3s ease; /* animação para abrir/fechar */
-  overflow-y: auto; /* garante scroll interno da sidebar */
-  -webkit-overflow-scrolling: touch; /* rolagem suave em iOS */
-  z-index: 1000; /* garante que fique acima de outros elementos */
 }
 
 /* Estado da sidebar fechada */
@@ -39,7 +36,6 @@
   align-items: center; /* centraliza verticalmente os itens */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* sombra sutil */
   padding: 0 1rem; /* espaçamento interno horizontal */
-  z-index: 1000; /* garante que fique acima do conteúdo */
 }
 
 /* Conteúdo interno da navbar */
