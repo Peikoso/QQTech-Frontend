@@ -17,10 +17,3 @@
   background-color: #2E7D32;
   color: white;
 }
-
-@media (max-width: 600px) {
-  .link {
-    padding: 0.75rem;
-    font-size: 1.1rem;
-  }
-}
