@@ -182,6 +182,7 @@
 @media (max-width: 600px) {
   .sidebar {
     position: fixed;
+    height: 100%;
   }
 
   .top-navbar {
