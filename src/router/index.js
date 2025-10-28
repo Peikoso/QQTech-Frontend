@@ -36,25 +36,21 @@ const router = createRouter({
     {
       path: '/',
       redirect: '/dashboard',
-      meta: { requiresAuth: true }
     },
     {
       path: '/dashboard',
       name: 'dashboard',
       component: DashboardView,
-      meta: { requiresAuth: true }
     },
     {
       path: '/incidentes',
       name: 'incidentes',
       component: IncidentesView,
-      meta: { requiresAuth: true }
     },
     {
       path: '/rules',
       name: 'rules',
       component: RulesView,
-      meta: { requiresAuth: true }
     },
     {
      path: '/rota',
@@ -66,31 +62,26 @@ const router = createRouter({
       path: '/users',
       name: 'users',
       component: UsersView,
-      meta: { requiresAuth: true, perfil: 'admin' }
     },
     {
       path: '/logs',
       name: 'logs',
       component: LogsView,
-      meta: { requiresAuth: true }
     },
     {
       path: '/perfil',
       name: 'perfil',
       component: PerfilView,
-      meta: { requiresAuth: true }
     },
     {
       path: '/runners',
       name: 'runners',
       component: RunnersView,
-      meta: { requiresAuth: true }
     },
     {
       path: '/relatorios',
       name: 'relatorios',
       component: RelatorioView,
-      meta: { requiresAuth: true }
     }
   ],
 })

@@ -56,7 +56,7 @@
               <td data-label="Regra">{{ regras.find(regra => regra.id === runner.regra_id)?.nome }}</td>
               <td data-label="Prioridade">{{ regras.find(regra => regra.id === runner.regra_id)?.prioridade }}</td>
               <td data-label="Próximas execuções">{{ runner.next_run }} minutos</td>
-              <td class="actions" style="text-align: center;"><button @click="pararRunner(runner)">Parar</button></td>
+              <td class="actions"><button @click="pararRunner(runner)">Parar</button></td>
             </tr>
           </tbody>
         </table>
@@ -87,7 +87,7 @@
               <td data-label="Regra">{{ regras.find(regra => regra.id === runner.regra_id)?.nome }}</td>
               <td data-label="Prioridade">{{ regras.find(regra => regra.id === runner.regra_id)?.prioridade }}</td>
               <td data-label="Próximas execuções">{{ runner.next_run }} minutos</td>
-              <td class="actions" style="text-align: center;"><button @click="iniciarRunner(runner)">Iniciar</button></td>
+              <td class="actions"><button @click="iniciarRunner(runner)">Iniciar</button></td>
             </tr>
           </tbody>
         </table>

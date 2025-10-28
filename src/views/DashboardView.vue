@@ -92,7 +92,7 @@
               <td data-label="Regra">{{ regras.find(regra => regra.id === incidente.regra_id)?.nome }}</td>
               <td data-label="Prioridade">{{ regras.find(regra => regra.id === incidente.regra_id)?.prioridade  }}</td>
               <td data-label="Aberta em">{{ incidente.created_at }}</td>
-              <td data-label="Status" class="actions" style="text-align: center">
+              <td data-label="Status" class="actions">
                 <button
                   class="button-status"
                   :class="buttonStatus(incidente.status)"

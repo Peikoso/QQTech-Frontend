@@ -180,6 +180,10 @@
    Mobile / Responsivo
 ========================== */
 @media (max-width: 600px) {
+  .sidebar {
+    position: fixed;
+  }
+
   .top-navbar {
     flex-direction: row;
     height: 50px;

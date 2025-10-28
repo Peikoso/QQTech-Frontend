@@ -45,6 +45,10 @@
             </tr>
           </tbody>
         </table>
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
+          <button @click="pagAnterior">Anterior</button>
+          <button @click="pagSeguinte">Seguinte</button>
+        </div>
       </div>
     </div>
 
