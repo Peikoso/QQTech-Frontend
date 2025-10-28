@@ -477,13 +477,21 @@ textarea#sql {
 
 /* Responsivo para mobile */
 @media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden; /* bloqueia o scroll horizontal */
+    width: 100%;
+  }
+
+  * {
+    box-sizing: border-box; /* evita que padding/margem cause overflow */
+  }
+
   .small-views {
     display: block;
   }
 
   .view-container {
     padding: 10px;
-    max-height: 60vh;
   }
 
   .view-container select {
