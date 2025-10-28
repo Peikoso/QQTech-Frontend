@@ -170,16 +170,80 @@ export function initMocks() {
   ];
 
   const logsMock = [
-    { id: 'run-001', rule_id: '1a2b3c4d-0001', result: 'Erro', duration: 2.3 },
-    { id: 'run-002', rule_id: '1a2b3c4d-0002', result: 'Sucesso', duration: 0.5 },
-    { id: 'run-003', rule_id: '1a2b3c4d-0003', result: 'Aviso', duration: 5.8 },
-    { id: 'run-004', rule_id: '1a2b3c4d-0004', result: 'Erro', duration: 1.2 },
-    { id: 'run-005', rule_id: '1a2b3c4d-0005', result: 'Aviso', duration: 0.8 },
-    { id: 'run-006', rule_id: '1a2b3c4d-0001', result: 'Erro', duration: 2.1 },
-    { id: 'run-007', rule_id: '1a2b3c4d-0002', result: 'Erro', duration: 0.7 },
+    // 🔔 Notificações
+    {
+      id: 'log-001',
+      type: 'notificacao',
+      result: 'Notificação enviada para João (alerta de incidente crítico)',
+      run_time: '2025-10-28T01:05:00',
+      error: null,
+      duration: 0.8,
+    },
+    {
+      id: 'log-002',
+      type: 'notificacao',
+      result: 'Notificação enviada para Maria (alerta de manutenção programada)',
+      run_time: '2025-10-28T01:06:00',
+      error: null,
+      duration: 1.1,
+    },
+
+    // ⚙️ Regras — Execuções
+    {
+      id: 'log-003',
+      type: 'regra',
+      result: 'Execução da regra de backup concluída com sucesso',
+      run_time: '2025-10-28T01:12:00',
+      error: null,
+      duration: 3.5,
+    },
+    {
+      id: 'log-004',
+      type: 'regra',
+      result: 'Erro ao executar regra de integridade (timeout excedido)',
+      run_time: '2025-10-28T01:17:00',
+      error: 'TimeoutError: operação excedeu o tempo limite',
+      duration: 5.2,
+    },
+
+    // 🧭 Rotas — Mudanças (CRUD)
+    {
+      id: 'log-005',
+      type: 'rota',
+      result: 'Nova rota criada para user_id=12 (canal: Slack) | Período: 2025-10-25 08:00 → 2025-10-25 20:00',
+      run_time: '2025-10-28T01:20:00',
+      error: null,
+      duration: 0.4,
+    },
+    {
+      id: 'log-006',
+      type: 'rota',
+      result: 'Rota atualizada para user_id=8 (canal: Email) | Novo término: 2025-10-27 22:00',
+      run_time: '2025-10-28T01:22:00',
+      error: null,
+      duration: 0.6,
+    },
+    {
+      id: 'log-007',
+      type: 'rota',
+      result: 'Rota removida para user_id=5 (canal: SMS)',
+      run_time: '2025-10-28T01:25:00',
+      error: null,
+      duration: 0.3,
+    },
+  ];
+
+
+  const runnersMock = [
+    { id: 'run-0001', ativo: 'active' , regra_id: '1a2b3c4d-0005', next_run: 5 },
+    { id: 'run-0002', ativo: 'inactive', regra_id: '1a2b3c4d-0002', next_run: 11 },
+    { id: 'run-0003', ativo: 'active', regra_id: '1a2b3c4d-0001', next_run: 12 },
+    { id: 'run-0004', ativo: 'inactive', regra_id: '1a2b3c4d-0003', next_run: 13 },
+    { id: 'run-0005', ativo: 'active', regra_id: '1a2b3c4d-0004', next_run: 7 },
   ];
 
   localStorage.setItem('regras', JSON.stringify(regrasMock))
   localStorage.setItem('incidentes', JSON.stringify(incidentesMock))
   localStorage.setItem('logs', JSON.stringify(logsMock))
+  localStorage.setItem('runners', JSON.stringify(runnersMock))
 }

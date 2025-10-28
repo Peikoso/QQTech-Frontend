@@ -44,7 +44,7 @@
             <tr v-for="incidente in incidentes" :key="incidente.id">
               <td data-label="ID" class="actions">
                 <span>{{ incidente.id }}</span>
-                <button @click="detalhesIncidente(incidente)">Ver</button>
+                <button @click="incidenteModal = true; detalhesIncidente(incidente)">Ver</button>
               </td>
               <td data-label="Regra">{{ regras.find((regra) => regra.id === incidente.regra_id)?.nome }}</td>
               <td data-label="Prioridade">{{ regras.find((regra) => regra.id === incidente.regra_id)?.prioridade }}</td>
@@ -80,9 +80,11 @@
           <p><strong>User ID Closed:</strong> {{ incidente.user_id_closed }}</p>
           <p><strong>Comentário Closed:</strong> {{ incidente.comentario_closed }}</p>
         </div>
-        <br/>
+        <div style="justify-content: center; display: flex; margin: 10px;">
+          <button class="button-status" :class="buttonStatus(incidente.status)" @click="statusIncidente(incidente);">{{ incidente.status }}</button>
+          <button class="button-status" style="width: 90px;" @click="reexecuteIncidente; reexecuteModal = true">Reexecutar</button>
+        </div>
         <hr/>
-        <br/>
         <div class="modal-details">
           <h2>Logs do Incidente</h2>
           <div class="table-responsive">
@@ -112,7 +114,7 @@
       <div class="modal-content">
         <button
           class="close-btn"
-          @click="comentarioModal = false; this.limparIncidente()">&times;</button>
+          @click="comentarioModal = false; this.limparComentario()">&times;</button>
         <form @submit.prevent="salvarComentario()">
           <label for="comentario">Comentário</label>
           <textarea id="comentario" v-model="novoComentario"></textarea>
@@ -170,8 +172,6 @@ export default {
   },
   methods: {
     detalhesIncidente(incidente) {
-      this.incidenteModal = true
-
       this.incidente.id = incidente.id
       this.incidente.regra_id = incidente.regra_id
       this.incidente.user_id_ack = incidente.user_id_ack
@@ -186,17 +186,7 @@ export default {
     },
 
     statusIncidente(incidente) {
-      this.incidente.id = incidente.id
-      this.incidente.regra_id = incidente.regra_id
-      this.incidente.user_id_ack = incidente.user_id_ack
-      this.incidente.user_id_closed = incidente.user_id_closed
-      this.incidente.status = incidente.status
-      this.incidente.comentario_ack = incidente.comentario_ack
-      this.incidente.comentario_closed = incidente.comentario_closed
-      this.incidente.created_at = incidente.created_at
-      this.incidente.ack_at = incidente.ack_at
-      this.incidente.closed_at = incidente.closed_at
-      this.incidente.logs = incidente.logs || []
+      this.detalhesIncidente(incidente)
 
       if (this.incidente.status === 'closed') {
         this.reexecuteModal = true
@@ -234,10 +224,10 @@ export default {
         data = {
           id: this.incidente.id,
           regra_id: this.incidente.regra_id,
-          user_id_ack: this.incidente.user_id_ack,
+          user_id_ack: this.incidente.user_id_ack || this.user.id,
           user_id_closed: this.user.id,
           status: 'closed',
-          comentario_ack: this.incidente.comentario_ack,
+          comentario_ack: this.incidente.comentario_ack || this.novoComentario,
           comentario_closed: this.novoComentario,
           created_at: this.incidente.created_at,
           ack_at: this.incidente.ack_at,
@@ -266,22 +256,16 @@ export default {
       this.incidentes[index] = data
 
       this.salvarLocalStorage()
-      this.limparIncidente()
+      this.limparComentario()
       this.comentarioModal = false
+      this.atualizarModal(this.incidente.id)
     },
-    limparIncidente() {
-      this.incidente.id = ''
-      this.incidente.regra_id = ''
-      this.incidente.user_id_ack = ''
-      this.incidente.user_id_closed = ''
-      this.incidente.status = ''
-      this.incidente.comentario_ack = ''
-      this.incidente.comentario_closed = ''
-      this.incidente.created_at = ''
-      this.incidente.ack_at = ''
-      this.incidente.closed_at = ''
+    atualizarModal(incidenteId) {
+      const index = this.incidentes.findIndex((i) => i.id === incidenteId)
+      this.detalhesIncidente(this.incidentes[index])
+    },
+    limparComentario() {
       this.novoComentario = ''
-      this.incidente.logs = []
     },
     reexecuteIncidente() {
       const index = this.regras.findIndex((r) => r.id === this.incidente.regra_id)
@@ -299,6 +283,7 @@ export default {
     if (incidenteId) {
       const incidente = this.incidentes.find(i => i.id == incidenteId)
       if (incidente) {
+        this.incidenteModal = true
         this.detalhesIncidente(incidente)
       }
     }
@@ -308,6 +293,7 @@ export default {
     if (novoId) {
       const incidente = this.incidentes.find(i => i.id == novoId)
       if (incidente) {
+        this.incidenteModal = true
         this.detalhesIncidente(incidente)
       }
     }

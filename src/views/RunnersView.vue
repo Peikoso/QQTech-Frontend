@@ -45,6 +45,7 @@
             <tr>
               <th>ID</th>
               <th>Regra</th>
+              <th>Prioridade</th>
               <th>Ciclo de Execução</th>
               <th>Ações</th>
             </tr>
@@ -53,6 +54,7 @@
             <tr v-for="runner in activeRunners" :key="runner.id">
               <td data-label="ID">{{ runner.id }}</td>
               <td data-label="Regra">{{ regras.find(regra => regra.id === runner.regra_id)?.nome }}</td>
+              <td data-label="Prioridade">{{ regras.find(regra => regra.id === runner.regra_id)?.prioridade }}</td>
               <td data-label="Próximas execuções">{{ runner.next_run }} minutos</td>
               <td class="actions" style="text-align: center;"><button @click="pararRunner(runner)">Parar</button></td>
             </tr>
@@ -74,6 +76,7 @@
             <tr>
               <th>ID</th>
               <th>Regra</th>
+              <th>Prioridade</th>
               <th>Ciclo de Execução</th>
               <th>Ações</th>
             </tr>
@@ -82,6 +85,7 @@
             <tr v-for="runner in inactiveRunners" :key="runner.id">
               <td data-label="ID">{{ runner.id }}</td>
               <td data-label="Regra">{{ regras.find(regra => regra.id === runner.regra_id)?.nome }}</td>
+              <td data-label="Prioridade">{{ regras.find(regra => regra.id === runner.regra_id)?.prioridade }}</td>
               <td data-label="Próximas execuções">{{ runner.next_run }} minutos</td>
               <td class="actions" style="text-align: center;"><button @click="iniciarRunner(runner)">Iniciar</button></td>
             </tr>
@@ -96,6 +100,13 @@
 export default {
   data() {
     return {
+      runner: {
+        id: '',
+        ativo: '',
+        regra_id: '',
+        next_run: '',
+      },
+      regrasAtivas: [],
       runners: [],
       filtro: '',
       activeRunners: [],
@@ -123,30 +134,47 @@ export default {
 
     },
     pararRunner(runner) {
+      const data = {
+        id: runner.id,
+        ativo: 'inactive',
+        regra_id: runner.regra_id,
+        next_run: runner.next_run,
+      }
+      const index = this.runners.findIndex(r => r.id === runner.id);
+      this.runners[index] = data;
+
       this.activeRunners = this.activeRunners.filter(r => r.id !== runner.id);
       this.inactiveRunners.push(runner);
+      this.salvarLocalStorage();
     },
     iniciarRunner(runner) {
+      const data = {
+        id: runner.id,
+        ativo: 'active',
+        regra_id: runner.regra_id,
+        next_run: runner.next_run,
+      }
+      const index = this.runners.findIndex(r => r.id === runner.id);
+      this.runners[index] = data;
+
       this.inactiveRunners = this.inactiveRunners.filter(r => r.id !== runner.id);
       this.activeRunners.push(runner);
+      this.salvarLocalStorage();
+    },
+    salvarLocalStorage() {
+      localStorage.setItem('runners', JSON.stringify(this.runners));
     },
     carregarLocalStorage() {
       this.regras = JSON.parse(localStorage.getItem('regras')) || [];
+      this.runners = JSON.parse(localStorage.getItem('runners')) || [];
 
-      let runnersData = [
-        { id: 1, ativo: 'active' , regra_id: '1a2b3c4d-0005', next_run: 5 },
-        { id: 2, ativo: 'inactive', regra_id: '1a2b3c4d-0002', next_run: 11 },
-        { id: 3, ativo: 'active', regra_id: '1a2b3c4d-0001', next_run: 12 },
-        { id: 4, ativo: 'inactive', regra_id: '1a2b3c4d-0003', next_run: 13 },
-      ];
-
-      runnersData = runnersData.filter(runner => {
+      this.regrasAtivas = this.runners.filter(runner => {
         const runners = this.regras.some(regra => regra.executar === true && regra.id === runner.regra_id);
         return runners;
       });
 
-      this.activeRunners = runnersData.filter(runner => runner.ativo === 'active');
-      this.inactiveRunners = runnersData.filter(runner => runner.ativo === 'inactive');
+      this.activeRunners = this.regrasAtivas.filter(runner => runner.ativo === 'active');
+      this.inactiveRunners = this.regrasAtivas.filter(runner => runner.ativo === 'inactive');
     },
   },
   mounted() {
