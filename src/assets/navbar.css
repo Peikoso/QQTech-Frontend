@@ -3,13 +3,15 @@
 ========================== */
 .sidebar {
   width: 220px; /* largura fixa */
-  height: 100vh; /* ocupa toda a altura da tela */
+  height: 100dvh; /* ocupa toda a altura da tela */
   background-color: #269447; /* cor de fundo */
   color: white; /* cor do texto */
   display: flex; /* layout flexível */
   flex-direction: column; /* organiza os itens verticalmente */
   padding: 1rem; /* espaçamento interno */
   transition: transform 0.3s ease; /* animação para abrir/fechar */
+  overflow-y: auto; /* garante scroll interno da sidebar */
+  -webkit-overflow-scrolling: touch; /* rolagem suave em iOS */
 }
 
 /* Estado da sidebar fechada */

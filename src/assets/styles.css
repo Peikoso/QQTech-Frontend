@@ -1,3 +1,10 @@
+html, body {
+  overflow-x: hidden; /* só bloqueia o horizontal */
+  overflow-y: auto;
+  height: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
 .conteudo-container {
   display: flex;
   justify-content: space-between; /* separa título e botão */
@@ -135,6 +142,14 @@
 .small-view-container p {
   margin: 2px 0 0 0;
   color: #666;
+}
+
+/* Corrige scroll travado em iPhone / Safari */
+.view-container,
+.small-view-container,
+.modal .modal-content {
+  -webkit-overflow-scrolling: touch; /* ativa rolagem inercial */
+  overflow-y: auto;
 }
 
 .table-responsive {
