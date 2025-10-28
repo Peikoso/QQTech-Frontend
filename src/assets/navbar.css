@@ -4,12 +4,15 @@
 .sidebar {
   width: 220px; /* largura fixa */
   height: 100vh; /* ocupa toda a altura da tela */
+  height: -webkit-fill-available; /* corrige Safari antigo */
   background-color: #269447; /* cor de fundo */
   color: white; /* cor do texto */
   display: flex; /* layout flexível */
   flex-direction: column; /* organiza os itens verticalmente */
   padding: 1rem; /* espaçamento interno */
   transition: transform 0.3s ease; /* animação para abrir/fechar */
+  z-index: 1000; /* garante que fique acima de outros elementos */
+  position: fixed; /* mantém fixo, evita bug de scroll */
 }
 
 /* Estado da sidebar fechada */
