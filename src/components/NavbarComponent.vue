@@ -40,8 +40,11 @@
         >
           Runners
         </router-link>
+        <div v-if="userData.perfil === 'admin'">
+          <hr>
+        </div>
         <router-link
-          v-if="!(userData.perfil === 'viewer')"
+          v-if="(userData.perfil === 'admin')"
           :to="{ name: 'logs' }"
           class="link"
           active-class="ativo"
@@ -49,7 +52,7 @@
           Logs de Execução
         </router-link>
         <router-link
-          v-if="!(userData.perfil === 'viewer')"
+          v-if="(userData.perfil === 'admin')"
           :to="{ name: 'relatorios' }"
           class="link"
           active-class="ativo"
