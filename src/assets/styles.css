@@ -483,7 +483,7 @@ textarea#sql {
 
   .view-container {
     padding: 10px;
-    max-height: 70vh;
+    min-height: 60vh;
   }
 
   .view-container select {
