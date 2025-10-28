@@ -182,27 +182,6 @@
 @media (max-width: 600px) {
   .sidebar {
     position: fixed;
-    width: 160px;
-    min-width: 160px;
-    padding: 0.5rem;
-  }
-
-  .navbar router-link {
-    font-size: 0.85rem;      /* links menores */
-    margin-left: 0.5rem;     /* menos espaçamento */
-  }
-
-  .sidebar .logo {
-    font-size: 1rem;
-  }
-
-  .sidebar nav .link {
-    font-size: 0.85rem;
-    padding: 0.3rem 0;
-  }
-
-  .sidebar img {
-    height: 25px; /* logo menor */
   }
 
   .top-navbar {
