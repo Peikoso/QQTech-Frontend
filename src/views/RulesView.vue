@@ -28,7 +28,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="regra in regras" :key="regra.id">
+            <tr v-for="regra in regras.slice(pagInicio, pagFim)" :key="regra.id">
               <td class="regra-nome-descricao">
                 <h4>{{ regra.nome }}</h4>
                 <p>{{ regra.descricao }}</p>
@@ -204,7 +204,9 @@ export default {
       play,
       pause,
       volume_up,
-      volume_mute
+      volume_mute,
+      pagInicio: 0,
+      pagFim: 5,
     }
   },
   methods: {
@@ -317,7 +319,19 @@ export default {
         this.sandbox.resultado = '';
       }, 3000);
 
-    }
+    },
+    pagAnterior(){
+      if(this.pagInicio > 0){
+        this.pagInicio -= 5;
+        this.pagFim -= 5;
+      }
+    },
+    pagSeguinte(){
+      if(this.pagFim < this.regras.length){
+        this.pagInicio += 5;
+        this.pagFim += 5;
+      }
+    },
   },
   mounted() {
     this.regras = this.carregarLocalStorageRegras();
