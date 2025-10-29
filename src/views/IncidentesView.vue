@@ -41,7 +41,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="incidente in incidentes" :key="incidente.id">
+            <tr v-for="incidente in incidentes.slice(pagInicio, pagFim)" :key="incidente.id">
               <td data-label="ID" class="actions">
                 <span>{{ incidente.id }}</span>
                 <button @click="incidenteModal = true; detalhesIncidente(incidente)">Ver</button>
@@ -61,6 +61,10 @@
             </tr>
           </tbody>
         </table>
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
+          <button @click="pagAnterior">Anterior</button>
+          <button @click="pagSeguinte">Seguinte</button>
+        </div>
       </div>
     </div>
 
@@ -168,6 +172,8 @@ export default {
       incidenteModal: false,
       comentarioModal: false,
       reexecuteModal: false,
+      pagInicio: 0,
+      pagFim: 5,
     }
   },
   methods: {
@@ -275,6 +281,18 @@ export default {
 
       this.salvarLocalStorage()
       this.reexecuteModal = false
+    },
+    pagAnterior(){
+      if(this.pagInicio > 0){
+        this.pagInicio -= 5;
+        this.pagFim -= 5;
+      }
+    },
+    pagSeguinte(){
+      if(this.pagFim < this.incidentes.length){
+        this.pagInicio += 5;
+        this.pagFim += 5;
+      }
     },
   },
   mounted() {

@@ -86,7 +86,7 @@
 
           <div class="row">
             <div class="col">
-              <label for="minuto_atualizacao">Intervalo (minutos)</label>
+              <label for="minuto_atualizacao">Intervalo de Execução (minutos)</label>
               <input type="number" id="minuto_atualizacao" v-model.number="regra.minuto_atualizacao" min="0">
             </div>
             <div class="col">
@@ -94,6 +94,9 @@
               <input type="number" id="qtd_erro_max" v-model.number="regra.qtd_erro_max" min="0">
             </div>
           </div>
+
+          <label for="timeout">Timeout (segundos)</label>
+          <input type="number" id="timeout" placeholder="0" v-model="regra.timeout" min="0">
 
           <div class="row">
             <div class="col">
@@ -161,6 +164,18 @@
         </div>
       </div>
     </div>
+
+    <div v-if="deleteModal" class="modal">
+      <div class="modal-content">
+        <h3>Confirmar Exclusão</h3>
+        <p>Tem certeza que deseja excluir esta regra?</p>
+        <div class="botoes-confirmacao">
+          <button style="background-color: red;" @click="confirmarDelete()">Sim, Excluir</button>
+          <button @click="deleteModal = false">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -183,6 +198,7 @@ export default {
         prioridade: 'Média',
         minuto_atualizacao: 0,
         qtd_erro_max: 0,
+        timeout: 0,
         hora_inicio: '00:00',
         hora_final: '00:00',
         roles: '',
@@ -195,6 +211,7 @@ export default {
       filtro: '',
       regraModal: false,
       modoEdicao: false,
+      deleteModal: false,
       sandboxModal: false,
       sandbox: {
         sql: '',
@@ -219,6 +236,7 @@ export default {
         prioridade: this.regra.prioridade,
         minuto_atualizacao: this.regra.minuto_atualizacao,
         qtd_erro_max: this.regra.qtd_erro_max,
+        timeout: this.regra.timeout,
         hora_inicio: this.regra.hora_inicio,
         hora_final: this.regra.hora_final,
         roles: this.regra.roles,
@@ -261,6 +279,7 @@ export default {
       this.regra.prioridade = regra.prioridade
       this.regra.minuto_atualizacao = regra.minuto_atualizacao
       this.regra.qtd_erro_max = regra.qtd_erro_max
+      this.regra.timeout = regra.timeout
       this.regra.hora_inicio = regra.hora_inicio
       this.regra.hora_final = regra.hora_final
       this.regra.roles = regra.roles
@@ -278,9 +297,14 @@ export default {
       this.salvarLocalStorageRegras()
     },
     excluirRegra(regra) {
-      const index = this.regras.findIndex(r => r.id === regra.id)
+      this.regra.id = regra.id
+      this.deleteModal = true
+    },
+    confirmarDelete(){
+      const index = this.regras.findIndex(r => r.id === this.regra.id)
       this.regras.splice(index, 1)
       this.salvarLocalStorageRegras()
+      this.deleteModal = false
     },
     carregarLocalStorageRegras() {
       const dados = JSON.parse(localStorage.getItem('regras')) || [];
@@ -299,6 +323,7 @@ export default {
       this.regra.prioridade = 'Média';
       this.regra.minuto_atualizacao = 0;
       this.regra.qtd_erro_max = 0;
+      this.regra.timeout = 0;
       this.regra.hora_inicio = '00:00';
       this.regra.hora_final = '00:00';
       this.regra.roles = '';

@@ -88,7 +88,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="incidente in incidentes" :key="incidente.id">
+            <tr v-for="incidente in incidentes.slice(pagInicio, pagFim)" :key="incidente.id">
               <td data-label="Regra">{{ regras.find(regra => regra.id === incidente.regra_id)?.nome }}</td>
               <td data-label="Prioridade">{{ regras.find(regra => regra.id === incidente.regra_id)?.prioridade  }}</td>
               <td data-label="Aberta em">{{ incidente.created_at }}</td>
@@ -104,6 +104,10 @@
             </tr>
           </tbody>
         </table>
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
+          <button @click="pagAnterior">Anterior</button>
+          <button @click="pagSeguinte">Seguinte</button>
+        </div>
       </div>
     </div>
     <div v-if="comentarioModal" class="modal">
@@ -149,6 +153,8 @@ export default{
       tempo_medio_res: 10,
       comentarioModal: false,
       novoComentario: '',
+      pagInicio: 0,
+      pagFim: 5,
     }
   },
   methods: {
@@ -242,6 +248,18 @@ export default{
       this.incidente.ack_at = ''
       this.incidente.closed_at = ''
       this.novoComentario = ''
+    },
+    pagAnterior(){
+      if(this.pagInicio > 0){
+        this.pagInicio -= 5;
+        this.pagFim -= 5;
+      }
+    },
+    pagSeguinte(){
+      if(this.pagFim < this.incidentes.length){
+        this.pagInicio += 5;
+        this.pagFim += 5;
+      }
     },
   },
   mounted(){

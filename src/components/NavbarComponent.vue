@@ -120,6 +120,18 @@
             </label>
           </div>
           <br />
+          <h5 style="text-align: center">Janela de Não Perturbe</h5>
+          <div class="row">
+            <div class="col">
+              <label for="hora_inicio">Hora Início</label>
+              <input type="time" id="hora_inicio" v-model="preferencia.startTime" />
+            </div>
+            <div class="col">
+              <label for="hora_final">Hora Final</label>
+              <input type="time" id="hora_final" v-model="preferencia.endTime" />
+            </div>
+          </div>
+          <br />
           <h5 style="text-align: center">Canais de Notificação</h5>
           <div class="row">
             <div class="col">
@@ -205,6 +217,8 @@ export default {
       preferencia: {
         enablePush: false,
         pushSound: false,
+        startTime: '00:00',
+        endTime: '00:00',
         enableEmail: false,
         enableComuniQ: false,
       },
@@ -246,6 +260,8 @@ export default {
         if (prefDoc.exists()) {
           this.preferencia.enablePush = prefDoc.data().enablePush
           this.preferencia.pushSound = prefDoc.data().pushSound
+          this.preferencia.startTime = prefDoc.data().startTime
+          this.preferencia.endTime = prefDoc.data().endTime
           this.preferencia.enableEmail = prefDoc.data().enableEmail
           this.preferencia.enableComuniQ = prefDoc.data().enableComuniQ
         }
@@ -300,6 +316,8 @@ export default {
         {
           enablePush: this.preferencia.enablePush,
           pushSound: this.preferencia.pushSound,
+          startTime: this.preferencia.startTime,
+          endTime: this.preferencia.endTime,
           enableEmail: this.preferencia.enableEmail,
           enableComuniQ: this.preferencia.enableComuniQ,
         },

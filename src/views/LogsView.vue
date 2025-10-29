@@ -32,7 +32,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="log in logs" :key="log.id">
+            <tr v-for="log in logs.slice(pagInicio, pagFim)" :key="log.id">
               <td data-label="ID">{{ log.id }}</td>
               <td data-label="Tipo">{{ log.type }}</td>
               <td data-label="Resultado">{{ log.result }}</td>
@@ -42,6 +42,10 @@
             </tr>
           </tbody>
         </table>
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
+          <button @click="pagAnterior">Anterior</button>
+          <button @click="pagSeguinte">Seguinte</button>
+        </div>
       </div>
     </div>
   </div>
@@ -53,12 +57,26 @@ export default {
   data() {
     return {
       logs: [],
-      filtroTipo: ''
+      filtroTipo: '',
+      pagInicio: 0,
+      pagFim: 5,
     };
   },
   methods: {
     carregarLocalStorage() {
       this.logs = JSON.parse(localStorage.getItem('logs')) || [];
+    },
+    pagAnterior(){
+      if(this.pagInicio > 0){
+        this.pagInicio -= 5;
+        this.pagFim -= 5;
+      }
+    },
+    pagSeguinte(){
+      if(this.pagFim < this.logs.length){
+        this.pagInicio += 5;
+        this.pagFim += 5;
+      }
     },
   },
   mounted() {

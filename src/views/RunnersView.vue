@@ -51,15 +51,19 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="runner in activeRunners" :key="runner.id">
+            <tr v-for="runner in activeRunners.slice(pagInicioOn, pagFimOn)" :key="runner.id">
               <td data-label="ID">{{ runner.id }}</td>
               <td data-label="Regra">{{ regras.find(regra => regra.id === runner.regra_id)?.nome }}</td>
               <td data-label="Prioridade">{{ regras.find(regra => regra.id === runner.regra_id)?.prioridade }}</td>
-              <td data-label="Próximas execuções">{{ runner.next_run }} minutos</td>
+              <td data-label="Ciclo de Execução">{{ regras.find(regra => regra.id === runner.regra_id)?.minuto_atualizacao  }} minutos</td>
               <td class="actions"><button @click="pararRunner(runner)">Parar</button></td>
             </tr>
           </tbody>
         </table>
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
+          <button @click="pagAnteriorOn">Anterior</button>
+          <button @click="pagSeguinteOn">Seguinte</button>
+        </div>
       </div>
     </div>
     <br>
@@ -82,15 +86,19 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="runner in inactiveRunners" :key="runner.id">
+            <tr v-for="runner in inactiveRunners.slice(pagInicioOff, pagFimOff)" :key="runner.id">
               <td data-label="ID">{{ runner.id }}</td>
               <td data-label="Regra">{{ regras.find(regra => regra.id === runner.regra_id)?.nome }}</td>
               <td data-label="Prioridade">{{ regras.find(regra => regra.id === runner.regra_id)?.prioridade }}</td>
-              <td data-label="Próximas execuções">{{ runner.next_run }} minutos</td>
+              <td data-label="Ciclo de Execução">{{ regras.find(regra => regra.id === runner.regra_id)?.minuto_atualizacao  }} minutos</td>
               <td class="actions"><button @click="iniciarRunner(runner)">Iniciar</button></td>
             </tr>
           </tbody>
         </table>
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
+          <button @click="pagAnteriorOff">Anterior</button>
+          <button @click="pagSeguinteOff">Seguinte</button>
+        </div>
       </div>
     </div>
 
@@ -104,7 +112,6 @@ export default {
         id: '',
         ativo: '',
         regra_id: '',
-        next_run: '',
       },
       regrasAtivas: [],
       runners: [],
@@ -114,6 +121,10 @@ export default {
       regras: [],
       startRunner: false,
       buttonStart: false,
+      pagInicioOn: 0,
+      pagFimOn: 5,
+      pagInicioOff: 0,
+      pagFimOff: 5,
     };
   },
   methods: {
@@ -138,7 +149,6 @@ export default {
         id: runner.id,
         ativo: 'inactive',
         regra_id: runner.regra_id,
-        next_run: runner.next_run,
       }
       const index = this.runners.findIndex(r => r.id === runner.id);
       this.runners[index] = data;
@@ -152,7 +162,6 @@ export default {
         id: runner.id,
         ativo: 'active',
         regra_id: runner.regra_id,
-        next_run: runner.next_run,
       }
       const index = this.runners.findIndex(r => r.id === runner.id);
       this.runners[index] = data;
@@ -175,6 +184,30 @@ export default {
 
       this.activeRunners = this.regrasAtivas.filter(runner => runner.ativo === 'active');
       this.inactiveRunners = this.regrasAtivas.filter(runner => runner.ativo === 'inactive');
+    },
+    pagAnteriorOn(){
+      if(this.pagInicioOn > 0){
+        this.pagInicioOn -= 5;
+        this.pagFimOn -= 5;
+      }
+    },
+    pagSeguinteOn(){
+      if(this.pagFimOn < this.activeRunners.length){
+        this.pagInicioOn += 5;
+        this.pagFimOn += 5;
+      }
+    },
+    pagAnteriorOff(){
+      if(this.pagInicioOff > 0){
+        this.pagInicioOff -= 5;
+        this.pagFimOff -= 5;
+      }
+    },
+    pagSeguinteOff(){
+      if(this.pagFimOff < this.inactiveRunners.length){
+        this.pagInicioOff += 5;
+        this.pagFimOff += 5;
+      }
     },
   },
   mounted() {
