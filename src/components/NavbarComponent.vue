@@ -159,7 +159,7 @@
       </div>
     </div>
 
-    <div class="modal" v-if="notificacaoModal">
+    <div class="modal" v-if="notificacaoModal" style="z-index: 3000;">
       <div class="modal-content" style="max-width: 800px;">
         <button class="close-btn" style="top: 34px;" @click="notificacaoModal = false">&times;</button>
         <div class="modal-details">
