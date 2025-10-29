@@ -181,7 +181,7 @@
                   <td data-label="Prioridade">{{ regras.find((regra) => regra.id === incidente.regra_id)?.prioridade }}</td>
                   <td data-label="Aberta em">{{ incidente.created_at }} minutos</td>
                   <td class="actions" style="text-align: center;">
-                    <button @click="this.$router.push({ name: 'incidentes', query: { incidenteId: incidente.id } })">Ir</button>
+                    <button @click="this.$router.push({ name: 'incidentes', query: { incidenteId: incidente.id } }); this.notificacaoModal = false">Ir</button>
                   </td>
                 </tr>
               </tbody>
