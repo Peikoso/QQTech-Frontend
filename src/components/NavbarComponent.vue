@@ -92,6 +92,7 @@
         </div>
         <ul v-if="dropdownOpen" class="dropdown">
           <li v-if="!(userData.perfil === 'viewer')">
+            <a class="link" @click="perfilModal = true">Perfil</a>
             <a class="link" @click="preferenciaModal = true">Preferências</a>
           </li>
           <li><a class="link" @click.prevent="logout">Sair</a></li>
@@ -159,6 +160,51 @@
       </div>
     </div>
 
+
+    <div class="modal" v-if="perfilModal" style="z-index: 2000">
+      <div class="modal-content">
+        <button class="close-btn" @click="perfilModal = false; getUserInfo()">&times;</button>
+        <h2>Perfil</h2>
+        <form @submit.prevent="salvarPerfil">
+          <div class="row">
+            <div class="col">
+              <label for="nome">Nome</label>
+              <input type="text" id="nome" v-model="userData.nome" :disabled="true" />
+            </div>
+            <div class="col">
+              <div class="avatar-container">
+                <img :src="userData.foto || avatarDefault" class="foto-perfil" />
+                <label for="file-avatar" class="editar-overlay">Editar</label>
+                <input id="file-avatar" type="file" @change="atualizarAvatar" accept="image/*"/>
+              </div>
+            </div>
+          </div>
+
+          <label for="email">Email</label>
+          <input type="email" id="email" v-model="userData.email" :disabled="true" />
+
+          <div class="row">
+            <div class="col">
+              <label for="matricula">Matrícula</label>
+              <input type="text" id="matricula" v-model="userData.matricula" :disabled="true" />
+            </div>
+            <div class="col">
+              <label for="perfil">Perfil</label>
+              <input type="text" id="perfil" v-model="userData.perfil" :disabled="true" />
+            </div>
+          </div>
+
+          <label for="roles">Roles</label>
+          <input type="text" id="roles" v-model="userData.roles" :disabled="true" />
+
+          <label for="telefone">Telefone</label>
+          <input type="number" id="telefone" v-model="userData.telefone" />
+
+          <button type="submit">Salvar</button>
+        </form>
+      </div>
+    </div>
+
     <div class="modal" v-if="notificacaoModal" style="z-index: 3000;">
       <div class="modal-content" style="max-width: 800px;">
         <button class="close-btn" style="top: 34px;" @click="notificacaoModal = false">&times;</button>
@@ -200,6 +246,7 @@ import { signOut } from 'firebase/auth'
 import { getDoc } from 'firebase/firestore'
 import logo from '@/assets/icons/logo.png'
 import notificacaoImg from '@/assets/icons/notifications.svg'
+import avatarDefault from '@/assets/icons/avatar-default.svg'
 
 export default {
   name: 'NavbarComponent',
@@ -210,9 +257,11 @@ export default {
         matricula: '',
         nome: '',
         email: '',
+        telefone: '',
         pending: '',
         perfil: '',
         roles: '',
+        foto: '',
       },
       preferencia: {
         enablePush: false,
@@ -238,23 +287,28 @@ export default {
       incidentes: [],
       regras: [],
       preferenciaModal: false,
-      logo,
+      perfilModal: false,
       notificacaoModal: false,
-      notificacaoImg,
       dropdownOpen: false,
       sidebarAberta: false,
+      avatarDefault,
+      logo,
+      notificacaoImg,
     }
   },
   methods: {
     async getUserInfo() {
       const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid))
       if (userDoc.exists()) {
-        ;((this.userData.id = userDoc.id), (this.userData.matricula = userDoc.data().matricula))
+        this.userData.id = userDoc.id
+        this.userData.matricula = userDoc.data().matricula
         this.userData.nome = userDoc.data().nome
         this.userData.email = userDoc.data().email
+        this.userData.telefone = userDoc.data().telefone || ''
         this.userData.pending = userDoc.data().pending
         this.userData.perfil = userDoc.data().perfil
         this.userData.roles = userDoc.data().roles
+        this.userData.foto = userDoc.data().foto || this.avatarDefault
 
         const prefDoc = await getDoc(doc(db, 'preferences', this.userData.id))
         if (prefDoc.exists()) {
@@ -265,20 +319,24 @@ export default {
           this.preferencia.enableEmail = prefDoc.data().enableEmail
           this.preferencia.enableComuniQ = prefDoc.data().enableComuniQ
         }
-      } else if (auth.currentUser.isAnonymous === true) {
-        ;((this.userData.id = 'visitante'),
-          (this.userData.matricula = 'visitante'),
-          (this.userData.nome = 'visitante'),
-          (this.userData.email = 'visitante'),
-          (this.userData.pending = 'visitante'),
-          (this.userData.perfil = 'viewer'),
-          (this.userData.roles = 'visitante'))
-      } else {
+      }
+      else if (auth.currentUser.isAnonymous === true) {
+        this.userData.id = 'visitante'
+        this.userData.matricula = 'visitante'
+        this.userData.nome = 'visitante'
+        this.userData.email = 'visitante'
+        this.userData.pending = 'visitante'
+        this.userData.perfil = 'viewer'
+        this.userData.roles = 'visitante'
+        this.userData.foto = this.avatarDefault
+      }
+      else {
         await signOut(auth)
         this.$router.push({ name: 'login' })
         localStorage.removeItem('userData')
       }
 
+      console.log(this.userData)
       localStorage.setItem('userData', JSON.stringify(this.userData))
     },
     clearUserInfo() {
@@ -287,9 +345,11 @@ export default {
         matricula: '',
         nome: '',
         email: '',
+        telefone: '',
         pending: '',
         perfil: '',
         roles: '',
+        foto: '',
       }
     },
     toggleDropdown() {
@@ -329,6 +389,26 @@ export default {
       this.regras = JSON.parse(localStorage.getItem('regras')) || []
       const incidentesData = JSON.parse(localStorage.getItem('incidentes')) || []
       this.incidentes = incidentesData.filter((incidente) => incidente.status === 'open')
+    },
+    async salvarPerfil() {
+      await setDoc(doc(db, 'users', this.userData.id),{
+        telefone: this.userData.telefone,
+      }, {merge: true})
+
+      console.log('Perfil salvo:', this.userData.foto)
+
+      this.perfilModal = false
+      this.getUserInfo()
+    },
+    atualizarAvatar(event) {
+      const file = event.target.files[0]
+      if (file) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          this.userData.foto = e.target.result
+        }
+        reader.readAsDataURL(file)
+      }
     },
   },
   mounted() {

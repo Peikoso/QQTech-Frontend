@@ -12,6 +12,7 @@
         <table>
           <thead>
             <tr>
+              <th></th>
               <th>Nome</th>
               <th>Email</th>
               <th>Matricula</th>
@@ -22,6 +23,11 @@
           </thead>
           <tbody>
             <tr v-for="user in users" :key="user.uid">
+              <td data-label="">
+                <div class="avatar-container" style="height: 50px; width: 50px; margin: 0;">
+                  <img :src="user.foto || avatarDefault" class="foto-perfil" />
+                </div>
+              </td>
               <td data-label="Nome">{{ user.nome }}</td>
               <td data-label="Email">{{ user.email }}</td>
               <td data-label="Matricula">{{ user.matricula }}</td>
@@ -52,7 +58,7 @@
           <input type="email" id="email" placeholder="Ex.: user@example.com" v-model="user.email" :disabled="modoEdicao">
 
           <label for="telefone">Telefone</label>
-          <input type="text" id="telefone" placeholder="Ex.: (11) 91234-5678" v-model="user.telefone">
+          <input type="number" id="telefone" placeholder="Ex.: 11912345678" v-model="user.telefone">
 
           <label for="roles">Roles (separados por vírgula)</label>
           <input type="text" id="roles" placeholder="ex.: CANAIS_DIGITAIS" v-model="user.roles">
@@ -74,11 +80,13 @@
 <script>
 import { db } from '../firebaseConfig.js'
 import { doc, setDoc, onSnapshot, collection, getDocs, where, query, deleteDoc } from "firebase/firestore";
+import avatarDefault from '@/assets/icons/avatar-default.svg';
 
 export default {
   name: 'UsersView',
   data() {
     return {
+
       user: {
         uid: '',
         nome: '',
@@ -93,7 +101,8 @@ export default {
       users: [],
       novoUsuarioModal: false,
       modoEdicao: false,
-      unsubscribe: null
+      unsubscribe: null,
+      avatarDefault
     }
   },
   methods: {
