@@ -7,6 +7,11 @@
   border-radius: 30px;
 }
 
+.button-status:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 .button-red {
   background-color: #b30d14;
 }

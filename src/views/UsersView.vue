@@ -84,6 +84,17 @@
         </form>
       </div>
     </div>
+
+    <div v-if="deleteModal" class="modal">
+      <div class="modal-content">
+        <h3>Confirmar Exclusão</h3>
+        <p>Tem certeza que deseja excluir este usuário?</p>
+        <div class="botoes-confirmacao">
+          <button style="background-color: red;" @click="confirmarDelete()">Sim, Excluir</button>
+          <button @click="deleteModal = false; limparForm()">Cancelar</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -110,6 +121,7 @@ export default {
       users: [],
       novoUsuarioModal: false,
       modoEdicao: false,
+      deleteModal: false,
       unsubscribe: null,
       avatarDefault,
       pagInicio: 0,
@@ -206,8 +218,14 @@ export default {
       this.user.pending = ''
       this.user.createdAt = ''
     },
-    async deleteUser(user) {
-      await deleteDoc(doc(db, 'users', user.uid))
+    deleteUser(user) {
+      this.user.uid = user.uid
+      this.deleteModal = true
+    },
+    async confirmarDelete(){
+      await deleteDoc(doc(db, 'users', this.user.uid))
+      this.limparForm()
+      this.deleteModal = false
     },
     async aprovarUser(user) {
       await setDoc(doc(db, 'users', user.uid),{

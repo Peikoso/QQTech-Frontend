@@ -34,7 +34,7 @@
           Regras
         </router-link>
         <router-link
-          v-if="userData.perfil === 'admin'"
+          v-if="userData.perfil !== 'viewer'"
           :to="{ name: 'runners' }"
           class="link"
           active-class="ativo"

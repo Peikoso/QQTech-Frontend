@@ -39,8 +39,8 @@
               <td data-label="Roles">{{ escala.roles }}</td>
               <td data-label="Perfil">{{ escala.perfil }}</td>
               <td class="actions" data-label="Ações">
-                <button @click="editarUser(escala)">Editar</button>
-                <button @click="deleteUser(escala)">Deletar</button>
+                <button @click="editarEscala(escala)">Editar</button>
+                <button @click="deleteEscala(escala)">Deletar</button>
               </td>
             </tr>
           </tbody>
@@ -51,6 +51,7 @@
         </div>
       </div>
     </div>
+
     <div class="modal" v-if="novaRotaModal">
       <div class="modal-content">
         <button class="close-btn" @click="novaRotaModal = false; modoEdicao = false; this.limparForm()">&times;</button>
@@ -71,6 +72,7 @@
         </form>
       </div>
     </div>
+
     <div class="modal" v-if="politicaRotaModal">
       <div class="modal-content">
         <button class="close-btn" @click="politicaRotaModal = false">&times;</button>
@@ -84,6 +86,16 @@
       </div>
     </div>
 
+    <div v-if="deleteModal" class="modal">
+      <div class="modal-content">
+        <h3>Confirmar Exclusão</h3>
+        <p>Tem certeza que deseja excluir esta escala?</p>
+        <div class="botoes-confirmacao">
+          <button style="background-color: red;" @click="confirmarDelete()">Sim, Excluir</button>
+          <button @click="deleteModal = false; limparForm()">Cancelar</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -92,7 +104,7 @@ import { db } from '../firebaseConfig.js'
 import { doc, setDoc, onSnapshot, collection, getDoc, deleteDoc, orderBy, query } from "firebase/firestore";
 
 export default {
-  name: 'UsersView',
+  name: 'RotasView',
   data() {
     return {
       user: {
@@ -117,6 +129,7 @@ export default {
       users: [],
       novaRotaModal: false,
       modoEdicao: false,
+      deleteModal: false,
       unsubscribeUsers: null,
       unsubscribeEscalas: null,
       filtroNome: '',
@@ -169,7 +182,7 @@ export default {
       this.modoEdicao = false
     },
 
-    editarUser(escala) {
+    editarEscala(escala) {
       this.escala.uid = escala.uid,
       this.escala.userUid = escala.userUid,
       this.escala.nome = escala.nome,
@@ -189,8 +202,14 @@ export default {
       this.escala.start_dt = ''
       this.escala.end_dt = ''
     },
-    async deleteUser(escala) {
-      await deleteDoc(doc(db, 'escalas', escala.uid))
+    async deleteEscala(escala) {
+      this.escala.uid = escala.uid;
+      this.deleteModal = true;
+    },
+    async confirmarDelete() {
+      await deleteDoc(doc(db, 'escalas', this.escala.uid))
+      this.limparForm()
+      this.deleteModal = false
     },
     formatDate(date){
       const dateObj = new Date(date);

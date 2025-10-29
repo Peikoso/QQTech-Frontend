@@ -94,6 +94,7 @@
               <td data-label="Aberta em">{{ incidente.created_at }}</td>
               <td data-label="Status" class="actions">
                 <button
+                  :disabled="user.perfil === 'viewer'"
                   class="button-status"
                   :class="buttonStatus(incidente.status)"
                   @click="mudarStatus(incidente)"

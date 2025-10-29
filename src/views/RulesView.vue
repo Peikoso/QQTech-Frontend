@@ -171,7 +171,7 @@
         <p>Tem certeza que deseja excluir esta regra?</p>
         <div class="botoes-confirmacao">
           <button style="background-color: red;" @click="confirmarDelete()">Sim, Excluir</button>
-          <button @click="deleteModal = false">Cancelar</button>
+          <button @click="deleteModal = false; limparForm()">Cancelar</button>
         </div>
       </div>
     </div>
@@ -304,6 +304,7 @@ export default {
       const index = this.regras.findIndex(r => r.id === this.regra.id)
       this.regras.splice(index, 1)
       this.salvarLocalStorageRegras()
+      this.limparForm()
       this.deleteModal = false
     },
     carregarLocalStorageRegras() {
