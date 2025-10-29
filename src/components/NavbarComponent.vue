@@ -395,8 +395,6 @@ export default {
         telefone: this.userData.telefone,
       }, {merge: true})
 
-      console.log('Perfil salvo:', this.userData.foto)
-
       this.perfilModal = false
       this.getUserInfo()
     },

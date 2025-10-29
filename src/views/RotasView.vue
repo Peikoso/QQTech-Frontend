@@ -31,7 +31,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="escala in escalas" :key="escala.uid">
+            <tr v-for="escala in escalas.slice(pagInicio, pagFim)" :key="escala.uid">
               <td data-label="Nome">{{ escala.nome }}</td>
               <td data-label="Email">{{ escala.email }}</td>
               <td data-label="Hora Inicio">{{ formatDate(escala.start_dt) }}</td>
@@ -45,6 +45,10 @@
             </tr>
           </tbody>
         </table>
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
+          <button @click="pagAnterior()">Anterior</button>
+          <button @click="pagSeguinte()">Seguinte</button>
+        </div>
       </div>
     </div>
     <div class="modal" v-if="novaRotaModal">
@@ -119,6 +123,8 @@ export default {
       filtroRole: '',
       politicaRotaModal: false,
       timeout: 10,
+      pagInicio: 0,
+      pagFim: 5,
     }
   },
   methods: {
@@ -201,7 +207,19 @@ export default {
     salvarPoliticaRota(timeout){
       this.timeout = timeout;
       this.politicaRotaModal = false;
-    }
+    },
+    pagAnterior(){
+      if(this.pagInicio > 0){
+        this.pagInicio -= 5;
+        this.pagFim -= 5;
+      }
+    },
+    pagSeguinte(){
+      if(this.pagFim < this.escalas.length){
+        this.pagInicio += 5;
+        this.pagFim += 5;
+      }
+    },
   },
   mounted() {
       this.getAllUsers();

@@ -8,6 +8,12 @@
       <button @click="novoUsuarioModal = true">Novo Usuário</button>
     </div>
     <div class="view-container">
+      <div>
+        <label class="filtro-label" for="filtro">Filtrar Nome</label>
+        <input type="text" id="filtro" v-model="filtroNome" placeholder="Digite o nome do usuário">
+        <label class="filtro-label" for="filtro">Filtrar Matricula</label>
+        <input type="text" id="filtro" v-model="filtroMatricula" placeholder="Digite a matrícula">
+      </div>
       <div class="table-responsive">
         <table>
           <thead>
@@ -22,7 +28,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="user in users" :key="user.uid">
+            <tr v-for="user in users.slice(pagInicio, pagFim)" :key="user.uid">
               <td data-label="">
                 <div class="avatar-container" style="height: 50px; width: 50px; margin: 0;">
                   <img :src="user.foto || avatarDefault" class="foto-perfil" />
@@ -42,6 +48,10 @@
             </tr>
           </tbody>
         </table>
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
+          <button @click="pagAnterior()">Anterior</button>
+          <button @click="pagSeguinte()">Seguinte</button>
+        </div>
       </div>
     </div>
     <div class="modal" v-if="novoUsuarioModal">
@@ -86,7 +96,6 @@ export default {
   name: 'UsersView',
   data() {
     return {
-
       user: {
         uid: '',
         nome: '',
@@ -102,7 +111,11 @@ export default {
       novoUsuarioModal: false,
       modoEdicao: false,
       unsubscribe: null,
-      avatarDefault
+      avatarDefault,
+      pagInicio: 0,
+      pagFim: 5,
+      filtroNome: '',
+      filtroMatricula: '',
     }
   },
   methods: {
@@ -200,6 +213,18 @@ export default {
       await setDoc(doc(db, 'users', user.uid),{
         pending: false,
       }, {merge: true})
+    },
+    pagAnterior(){
+      if(this.pagInicio > 0){
+        this.pagInicio -= 5;
+        this.pagFim -= 5;
+      }
+    },
+    pagSeguinte(){
+      if(this.pagFim < this.users.length){
+        this.pagInicio += 5;
+        this.pagFim += 5;
+      }
     },
   },
   mounted() {
