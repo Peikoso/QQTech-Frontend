@@ -2,12 +2,12 @@
   <div>
     <div class="conteudo-container">
       <div class="titulo-descricao">
-        <h3>Gestão de Usuários</h3>
-        <p>Gerenciamento e criação de usuários</p>
+        <h3>Gestão de Rotas</h3>
+        <p>Gerenciamento e criação de Rotas</p>
       </div>
       <div>
-        <button @click="politicaEscalaModal = true">Política de Escala</button>
-        <button @click="novaEscalaModal = true">Nova Escala</button>
+        <button @click="politicaRotaModal = true">Política de Rota</button>
+        <button @click="novaRotaModal = true">Nova Rota</button>
       </div>
     </div>
     <div class="view-container">
@@ -47,9 +47,9 @@
         </table>
       </div>
     </div>
-    <div class="modal" v-if="novaEscalaModal">
+    <div class="modal" v-if="novaRotaModal">
       <div class="modal-content">
-        <button class="close-btn" @click="novaEscalaModal = false; modoEdicao = false; this.limparForm()">&times;</button>
+        <button class="close-btn" @click="novaRotaModal = false; modoEdicao = false; this.limparForm()">&times;</button>
         <form @submit.prevent="createEscala">
           <label for="user">User</label>
           <select v-model="selectedUserId" id="user">
@@ -67,16 +67,16 @@
         </form>
       </div>
     </div>
-    <div class="modal" v-if="politicaEscalaModal">
+    <div class="modal" v-if="politicaRotaModal">
       <div class="modal-content">
-        <button class="close-btn" @click="politicaEscalaModal = false">&times;</button>
-        <h2>Política de Escala</h2>
-        <p>Aqui você pode definir as políticas relacionadas às escalas de trabalho.</p>
+        <button class="close-btn" @click="politicaRotaModal = false">&times;</button>
+        <h2>Política de Rota</h2>
+        <p>Aqui você pode definir as políticas relacionadas às rotas de trabalho.</p>
 
         <label for="timeout">Tempo de timeout (minutos)</label>
         <input type="number" id="timeout" v-model="timeout" placeholder="Tempo de timeout (minutos)">
 
-        <button @click="salvarPoliticaEscala(timeout)">Salvar</button>
+        <button @click="salvarPoliticaRota(timeout)">Salvar</button>
       </div>
     </div>
 
@@ -111,13 +111,13 @@ export default {
       escalas: [],
       selectedUserId: '',
       users: [],
-      novaEscalaModal: false,
+      novaRotaModal: false,
       modoEdicao: false,
       unsubscribeUsers: null,
       unsubscribeEscalas: null,
       filtroNome: '',
       filtroRole: '',
-      politicaEscalaModal: false,
+      politicaRotaModal: false,
       timeout: 10,
     }
   },
@@ -159,7 +159,7 @@ export default {
       }, {merge: true})
 
       this.limparForm()
-      this.novaEscalaModal = false
+      this.novaRotaModal = false
       this.modoEdicao = false
     },
 
@@ -175,7 +175,7 @@ export default {
 
       this.selectedUserId = escala.userUid
 
-      this.novaEscalaModal = true
+      this.novaRotaModal = true
       this.modoEdicao = true
     },
     limparForm() {
@@ -198,9 +198,9 @@ export default {
 
       return  formatedDate;
     },
-    salvarPoliticaEscala(timeout){
+    salvarPoliticaRota(timeout){
       this.timeout = timeout;
-      this.politicaEscalaModal = false;
+      this.politicaRotaModal = false;
     }
   },
   mounted() {

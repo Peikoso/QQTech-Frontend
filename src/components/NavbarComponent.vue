@@ -5,6 +5,7 @@
         <button class="side-button" @click="toggleSidebar">☰</button>
         <button v-if="incidentes.length > 0" class="top-alert" @click="notificacaoModal=true">
           <img :src="notificacaoImg" />
+          <span class="alert-count">{{ incidentes.length }}</span>
         </button>
       </div>
     </header>
@@ -119,18 +120,6 @@
             </label>
           </div>
           <br />
-          <h5 style="text-align: center">Horário de Silêncio</h5>
-          <div class="row">
-            <div class="col">
-              <label for="hora_inicio">Hora Início</label>
-              <input type="time" id="hora_inicio" v-model="preferencia.startTime" />
-            </div>
-            <div class="col">
-              <label for="hora_final">Hora Final</label>
-              <input type="time" id="hora_final" v-model="preferencia.endTime" />
-            </div>
-          </div>
-          <br />
           <h5 style="text-align: center">Canais de Notificação</h5>
           <div class="row">
             <div class="col">
@@ -145,21 +134,13 @@
 
             <div class="col">
               <div class="switch-container">
-                <span class="switch-label">WhatsApp</span>
+                <span class="switch-label">ComuniQ</span>
                 <label class="switch">
-                  <input type="checkbox" v-model="preferencia.enableWhatsApp" />
+                  <input type="checkbox" v-model="preferencia.enableComuniQ" />
                   <span class="slider"></span>
                 </label>
               </div>
             </div>
-          </div>
-
-          <div class="switch-container">
-            <span class="switch-label">Slack</span>
-            <label class="switch">
-              <input type="checkbox" v-model="preferencia.enableSlack" />
-              <span class="slider"></span>
-            </label>
           </div>
           <button type="submit">Salvar</button>
         </form>
@@ -224,11 +205,8 @@ export default {
       preferencia: {
         enablePush: false,
         pushSound: false,
-        startTime: '00:00',
-        endTime: '00:00',
         enableEmail: false,
-        enableWhatsApp: false,
-        enableSlack: false,
+        enableComuniQ: false,
       },
       incidente: {
         id: '',
@@ -268,11 +246,8 @@ export default {
         if (prefDoc.exists()) {
           this.preferencia.enablePush = prefDoc.data().enablePush
           this.preferencia.pushSound = prefDoc.data().pushSound
-          this.preferencia.startTime = prefDoc.data().startTime
-          this.preferencia.endTime = prefDoc.data().endTime
           this.preferencia.enableEmail = prefDoc.data().enableEmail
-          this.preferencia.enableWhatsApp = prefDoc.data().enableWhatsApp
-          this.preferencia.enableSlack = prefDoc.data().enableSlack
+          this.preferencia.enableComuniQ = prefDoc.data().enableComuniQ
         }
       } else if (auth.currentUser.isAnonymous === true) {
         ;((this.userData.id = 'visitante'),
@@ -325,11 +300,8 @@ export default {
         {
           enablePush: this.preferencia.enablePush,
           pushSound: this.preferencia.pushSound,
-          startTime: this.preferencia.startTime,
-          endTime: this.preferencia.endTime,
           enableEmail: this.preferencia.enableEmail,
-          enableWhatsApp: this.preferencia.enableWhatsApp,
-          enableSlack: this.preferencia.enableSlack,
+          enableComuniQ: this.preferencia.enableComuniQ,
         },
         { merge: true },
       )

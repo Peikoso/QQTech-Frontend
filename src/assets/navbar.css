@@ -161,7 +161,7 @@
   right: 2rem; /* distância do canto direito */
   top: 50%; /* centraliza verticalmente */
   transform: translateY(-50%); /* ajusta centralização exata */
-  background-color: #269447;
+  background-color: #c9433d;
   color: white;
   border: none;
   border-radius: 26px;
@@ -169,6 +169,15 @@
   cursor: pointer;
   font-size: 0.9rem;
   transition: background-color 0.3s ease;
+}
+
+.top-alert:hover {
+  background-color: #80090a; /* efeito hover */
+}
+
+.alert-count {
+  font-weight: bold;
+  margin-bottom: 12px;
 }
 
 /* Desloca o botão quando sidebar aberta */
