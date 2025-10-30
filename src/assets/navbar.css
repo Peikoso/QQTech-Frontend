@@ -221,7 +221,7 @@
     height: 100dvh;
     overflow-y: auto;
     position: fixed;
-    z-index: 3000;
+    z-index: 1000;
   }
 
   .logo {

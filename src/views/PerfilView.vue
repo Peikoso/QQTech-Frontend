@@ -1,5 +1,5 @@
 <template>
-  <div class="modal"  style="background: none; position: relative;">
+  <div class="modal"  style="background: none; position: relative; z-index: 500;">
     <div class="modal-content" style="max-width: 1000px;">
       <div class="conteudo-container" style="display: flex; justify-content: center;">
         <div class="titulo-descricao">

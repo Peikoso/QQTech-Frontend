@@ -240,7 +240,7 @@
                   <td data-label="Aberta em">{{ incidente.created_at }} minutos</td>
                   <td class="actions" style="text-align: center">
                     <button
-                      @click="this.$router.push({name: 'incidentes',query: { incidenteId: incidente.id }}); this.notificacaoModal = false">
+                      @click="notificacaoModal = false; sidebarAberta = false; this.$router.push({name: 'incidentes',query: { incidenteId: incidente.id }});">
                       Ir
                     </button>
                   </td>
