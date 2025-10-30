@@ -3,30 +3,24 @@
     <header class="top-navbar">
       <div class="top-navbar-content">
         <button class="side-button" @click="toggleSidebar">☰</button>
-        <button v-if="incidentes.length > 0" class="top-alert" @click="notificacaoModal=true">
+        <button v-if="!sidebarAberta" class="top-alert" style="background-color: #269447; margin-right: 75px;">
+          <img :src="help" @click="helpModal = true" />
+        </button>
+        <button v-if="incidentes.length > 0" class="top-alert" @click="notificacaoModal = true">
           <img :src="notificacaoImg" />
           <span class="alert-count">{{ incidentes.length }}</span>
         </button>
       </div>
     </header>
     <aside :class="['sidebar', { fechada: !sidebarAberta }]">
-      <img :src="logo" alt="logo" />
+      <img style="" :src="logo" alt="logo" />
       <br />
       <h2 class="logo">Plantão Monitor</h2>
       <nav>
-        <router-link
-        :to="{ name: 'dashboard' }"
-        class="link"
-        active-class="ativo"
-        >
-        Dashboard
-        </router-link
-        >
-        <router-link
-          :to="{ name: 'incidentes' }"
-          class="link"
-          active-class="ativo"
-        >
+        <router-link :to="{ name: 'dashboard' }" class="link" active-class="ativo">
+          Dashboard
+        </router-link>
+        <router-link :to="{ name: 'incidentes' }" class="link" active-class="ativo">
           Incidentes
         </router-link>
         <router-link
@@ -46,10 +40,10 @@
           Runners
         </router-link>
         <div v-if="userData.perfil === 'admin'">
-          <hr>
+          <hr />
         </div>
         <router-link
-          v-if="(userData.perfil === 'admin')"
+          v-if="userData.perfil === 'admin'"
           :to="{ name: 'logs' }"
           class="link"
           active-class="ativo"
@@ -57,7 +51,7 @@
           Logs de Execução
         </router-link>
         <router-link
-          v-if="(userData.perfil === 'admin')"
+          v-if="userData.perfil === 'admin'"
           :to="{ name: 'relatorios' }"
           class="link"
           active-class="ativo"
@@ -88,6 +82,14 @@
         >
           Gestão de Perfils
         </router-link>
+        <router-link
+          v-if="userData.perfil === 'admin'"
+          :to="{ name: 'settings' }"
+          class="link settings-link"
+          active-class="ativo"
+        >
+          Configurações
+        </router-link>
       </nav>
 
       <div class="user-menu" @click="toggleDropdown">
@@ -104,7 +106,7 @@
       </div>
     </aside>
 
-    <div class="modal" v-if="preferenciaModal" style="z-index: 2000">
+    <div class="modal" v-if="preferenciaModal" style="z-index: 4000">
       <div class="modal-content">
         <button class="close-btn" @click="preferenciaModal = false">&times;</button>
         <h2>Preferências</h2>
@@ -164,10 +166,12 @@
       </div>
     </div>
 
-
-    <div class="modal" v-if="perfilModal" style="z-index: 2000">
+    <div class="modal" v-if="perfilModal" style="z-index: 4000">
       <div class="modal-content">
-        <button class="close-btn" @click="perfilModal = false; getUserInfo()">&times;</button>
+        <button
+          class="close-btn"
+          @click="perfilModal = false; getUserInfo()">&times;
+        </button>
         <h2>Perfil</h2>
         <form @submit.prevent="salvarPerfil">
           <div class="row">
@@ -179,7 +183,7 @@
               <div class="avatar-container">
                 <img :src="userData.foto || avatarDefault" class="foto-perfil" />
                 <label for="file-avatar" class="editar-overlay">Editar</label>
-                <input id="file-avatar" type="file" @change="atualizarAvatar" accept="image/*"/>
+                <input id="file-avatar" type="file" @change="atualizarAvatar" accept="image/*" />
               </div>
             </div>
           </div>
@@ -209,9 +213,11 @@
       </div>
     </div>
 
-    <div class="modal" v-if="notificacaoModal" style="z-index: 3000;">
-      <div class="modal-content" style="max-width: 800px;">
-        <button class="close-btn" style="top: 34px;" @click="notificacaoModal = false">&times;</button>
+    <div class="modal" v-if="notificacaoModal" style="z-index: 4000">
+      <div class="modal-content" style="max-width: 800px">
+        <button class="close-btn" style="top: 34px" @click="notificacaoModal = false">
+          &times;
+        </button>
         <div class="modal-details">
           <h2>Notificações</h2>
           <div class="table-responsive">
@@ -228,15 +234,44 @@
               <tbody>
                 <tr v-for="incidente in incidentes" :key="incidente.id">
                   <td data-label="ID">{{ incidente.id }}</td>
-                  <td data-label="Prioridade">{{ regras.find((regra) => regra.id === incidente.regra_id)?.prioridade }}</td>
+                  <td data-label="Prioridade">
+                    {{ regras.find((regra) => regra.id === incidente.regra_id)?.prioridade }}
+                  </td>
                   <td data-label="Aberta em">{{ incidente.created_at }} minutos</td>
-                  <td class="actions" style="text-align: center;">
-                    <button @click="this.$router.push({ name: 'incidentes', query: { incidenteId: incidente.id } }); this.notificacaoModal = false">Ir</button>
+                  <td class="actions" style="text-align: center">
+                    <button
+                      @click="this.$router.push({name: 'incidentes',query: { incidenteId: incidente.id }}); this.notificacaoModal = false">
+                      Ir
+                    </button>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" v-if="helpModal" style="z-index: 4000">
+      <div class="modal-content" style="max-width: 600px">
+        <button class="close-btn" style="top: 34px" @click="helpModal = false">&times;</button>
+        <div class="modal-details">
+          <h4>Glossário</h4>
+          <p><strong>Runner:</strong> Serviço que executa regras programadas.</p>
+          <p>
+            <strong>Incident:</strong> Agrupamento de ocorrências relacionadas a uma regra/erro.
+          </p>
+          <p>
+            <strong>ACK:</strong> Confirmação recebida por um plantonista indicando que está ciente.
+          </p>
+          <p>
+            <strong>Role:</strong> Etiqueta que mapeia regras a grupos de usuários (ex.:
+            CANAIS_DIGITAIS).
+          </p>
+          <h4>Ajuda e Suporte</h4>
+          <p>
+            Para assistência, entre em contato com o suporte técnico pelo email suporte@exemplo.com
+          </p>
         </div>
       </div>
     </div>
@@ -251,6 +286,7 @@ import { getDoc } from 'firebase/firestore'
 import logo from '@/assets/icons/logo.png'
 import notificacaoImg from '@/assets/icons/notifications.svg'
 import avatarDefault from '@/assets/icons/avatar-default.svg'
+import help from '@/assets/icons/help.svg'
 
 export default {
   name: 'NavbarComponent',
@@ -293,11 +329,13 @@ export default {
       preferenciaModal: false,
       perfilModal: false,
       notificacaoModal: false,
+      helpModal: false,
       dropdownOpen: false,
       sidebarAberta: false,
       avatarDefault,
       logo,
       notificacaoImg,
+      help,
     }
   },
   methods: {
@@ -323,8 +361,7 @@ export default {
           this.preferencia.enableEmail = prefDoc.data().enableEmail
           this.preferencia.enableComuniQ = prefDoc.data().enableComuniQ
         }
-      }
-      else if (auth.currentUser.isAnonymous === true) {
+      } else if (auth.currentUser.isAnonymous === true) {
         this.userData.id = 'visitante'
         this.userData.matricula = 'visitante'
         this.userData.nome = 'visitante'
@@ -333,8 +370,7 @@ export default {
         this.userData.perfil = 'viewer'
         this.userData.roles = 'visitante'
         this.userData.foto = this.avatarDefault
-      }
-      else {
+      } else {
         await signOut(auth)
         this.$router.push({ name: 'login' })
         localStorage.removeItem('userData')
@@ -394,9 +430,13 @@ export default {
       this.incidentes = incidentesData.filter((incidente) => incidente.status === 'open')
     },
     async salvarPerfil() {
-      await setDoc(doc(db, 'users', this.userData.id),{
-        telefone: this.userData.telefone,
-      }, {merge: true})
+      await setDoc(
+        doc(db, 'users', this.userData.id),
+        {
+          telefone: this.userData.telefone,
+        },
+        { merge: true },
+      )
 
       this.perfilModal = false
       this.getUserInfo()

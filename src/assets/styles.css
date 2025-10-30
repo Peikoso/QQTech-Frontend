@@ -19,7 +19,7 @@
 /* Container principal da tabela */
 .view-container {
   margin: 10px;
-  padding: 10px;
+  padding: 16px;
   display: block;
   max-height: 80vh;
   border: 1px solid #ccc;
@@ -63,6 +63,7 @@
   width: 100%; /* ocupa toda a largura do container */
   padding: 6px 10px; /* espaçamento interno confortável */
   margin-top: 4px; /* pequena distância do label */
+  margin-bottom: 4px;
   border: 1px solid #ccc; /* borda leve */
   border-radius: 5px; /* cantos arredondados */
   font-size: 0.9rem; /* tamanho de texto consistente */
@@ -112,7 +113,7 @@
 .small-view-container {
   flex: 1;
   margin: 10px;
-  padding: 10px;
+  padding: 16px;
   display: block;
   min-height: 10vh;
   min-width: 20vh;

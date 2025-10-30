@@ -11,6 +11,7 @@ import AcessoView from '../views/AcessoView.vue'
 import PerfilView from '../views/PerfilView.vue'
 import RunnersView from '../views/RunnersView.vue'
 import RelatorioView from '../views/RelatorioView.vue'
+import SettingsView from '../views/SettingsView.vue'
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from '../firebaseConfig.js'
 
@@ -82,6 +83,11 @@ const router = createRouter({
       path: '/relatorios',
       name: 'relatorios',
       component: RelatorioView,
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: SettingsView,
     }
   ],
 })

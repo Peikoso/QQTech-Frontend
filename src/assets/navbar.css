@@ -10,6 +10,8 @@
   flex-direction: column; /* organiza os itens verticalmente */
   padding: 1rem; /* espaçamento interno */
   transition: transform 0.3s ease; /* animação para abrir/fechar */
+  overflow-y: auto; /* permite rolagem quando necessário */
+  overflow-x: hidden; /* evita rolagem horizontal */
 }
 
 /* Estado da sidebar fechada */
@@ -70,7 +72,29 @@
 ========================== */
 .logo {
   font-size: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+  flex-shrink: 0; /* não encolhe */
+}
+
+.sidebar img {
+  flex-shrink: 0; /* logo não encolhe */
+}
+
+/* ==========================
+   Navegação
+========================== */
+.sidebar nav {
+  flex: 1; /* ocupa espaço disponível */
+  overflow-y: auto; /* permite rolagem dos links */
+  overflow-x: hidden;
+  margin-bottom: 1rem;
+  min-height: 0; /* permite que o flex funcione corretamente */
+}
+
+.sidebar nav hr {
+  margin: 0.5rem 0;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* ==========================
@@ -80,6 +104,8 @@
   margin-top: auto; /* empurra para baixo da sidebar */
   position: relative;
   cursor: pointer;
+  flex-shrink: 0; /* não encolhe */
+  padding-top: 0.5rem; /* espaçamento superior */
 }
 
 .user-info {
@@ -138,7 +164,9 @@
   cursor: pointer;
   padding: 0.6rem 0.8rem;
   font-size: 1.2rem;
-  transition: background-color 0.3s ease, left 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    left 0.3s ease;
 }
 
 /* Posição do botão quando sidebar está aberta */
@@ -155,7 +183,7 @@
 ========================== */
 .top-alert {
   display: flex;
-  align-items: center;   /* vertical */
+  align-items: center; /* vertical */
   justify-content: center; /* horizontal */
   position: absolute; /* fixa na tela */
   right: 2rem; /* distância do canto direito */
@@ -188,10 +216,26 @@
 /* ==========================
    Mobile / Responsivo
 ========================== */
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) {
   .sidebar {
+    height: 100dvh;
+    overflow-y: auto;
     position: fixed;
-    z-index: 2000;
+    z-index: 3000;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .sidebar img {
+    max-width: 80px;
+    height: auto;
+  }
+
+  .sidebar nav {
+    margin-bottom: 0.5rem;
   }
 
   .top-navbar {
@@ -203,5 +247,74 @@
   .top-alert {
     top: 1.2rem; /* ajusta botão no mobile */
     right: 2rem;
+  }
+}
+
+/* Media query específica para altura pequena */
+@media (max-height: 700px) {
+  .logo {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .sidebar {
+    padding: 0.75rem;
+  }
+
+  .sidebar img {
+    max-width: 60px;
+    height: auto;
+  }
+
+  .sidebar nav {
+    font-size: 0.9rem;
+  }
+
+  .sidebar nav hr {
+    margin: 0.3rem 0;
+  }
+
+  .user-info {
+    padding: 0.3rem;
+    font-size: 0.9rem;
+  }
+
+  .avatar {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+@media (max-height: 500px) {
+  .logo {
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .sidebar {
+    padding: 0.5rem;
+  }
+
+  .sidebar img {
+    max-width: 50px;
+    height: auto;
+  }
+
+  .sidebar nav {
+    font-size: 0.85rem;
+  }
+
+  .sidebar nav hr {
+    margin: 0.2rem 0;
+  }
+
+  .user-info {
+    padding: 0.25rem;
+    font-size: 0.85rem;
+  }
+
+  .avatar {
+    width: 24px;
+    height: 24px;
   }
 }
