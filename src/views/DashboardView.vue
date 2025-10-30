@@ -72,9 +72,26 @@
     </div>
     <div class="view-container">
       <p>Feed de Incidentes</p>
-      <div>
-        <label class="filtro-label" for="filtro">Filtrar incidentes</label>
-        <input type="text" id="filtro" v-model="filtro" placeholder="Pesquise por regra, status, prioridade...">
+      <div class="filtro-container">
+        <label class="filtro-label" for="filtro">Filtrar Incidentes</label>
+        <select id="filtro-status" v-model="filtroStatus">
+          <option value="">Todos</option>
+          <option value="open">Open</option>
+          <option value="ack">ACK</option>
+          <option value="closed">Closed</option>
+        </select>
+        <select id="filtro-regra" v-model="filtroRegra">
+          <option value="">Todas as Regras</option>
+          <option v-for="regra in regras" :key="regra.id" :value="regra.id">
+            {{ regra.nome }}
+          </option>
+        </select>
+        <select id="filtro-prioridade" v-model="filtroPrioridade">
+          <option value="">Todas as Prioridades</option>
+          <option value="Baixa">Baixa</option>
+          <option value="Média">Média</option>
+          <option value="Alta">Alta</option>
+        </select>
       </div>
       <div class="table-responsive">
         <h2 v-if="incidentes.length == 0">Nenhum incidente</h2>
@@ -146,7 +163,9 @@ export default{
       incidentes: [],
       regras: [],
       user: {},
-      filtro: '',
+      filtroStatus: '',
+      filtroRegra: '',
+      filtroPrioridade: '',
       tratamento: 3,
       fechados: 4,
       regras_ativas: 2,

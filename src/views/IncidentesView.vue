@@ -51,7 +51,7 @@
               <td data-label="Aberta em">{{ incidente.created_at }}</td>
               <td data-label="Status" class="actions">
                 <button
-                  :disabled="user.perfil === 'viewer'"
+                  :disabled="LoggedUser.perfil === 'viewer'"
                   class="button-status"
                   :class="buttonStatus(incidente.status)"
                   @click="statusIncidente(incidente)"
@@ -75,19 +75,28 @@
         <div class="modal-details">
           <h4>Detalhes do Incidente</h4>
           <p><strong>ID do Incidente:</strong> {{ incidente.id }}</p>
+          <p><strong>Usuário Escalado:</strong> {{ users.find(user => user.uid === incidente.user_escalado)?.nome }}</p>
           <p><strong>Criado em:</strong> {{ incidente.created_at }}</p>
           <p><strong>Regra ID:</strong> {{ incidente.regra_id }}</p>
           <p><strong>Status:</strong> {{ incidente.status }}</p>
           <p><strong>Ack em:</strong> {{ incidente.ack_at }}</p>
-          <p><strong>User ID ACK:</strong> {{ incidente.user_id_ack }}</p>
+          <p><strong>User ACK:</strong> {{ users.find(user => user.uid === incidente.user_id_ack)?.nome }}</p>
           <p><strong>Comentário ACK:</strong> {{ incidente.comentario_ack }}</p>
           <p><strong>Closed em:</strong> {{ incidente.closed_at }}</p>
-          <p><strong>User ID Closed:</strong> {{ incidente.user_id_closed }}</p>
+          <p><strong>User Closed:</strong> {{ users.find(user => user.uid === incidente.user_id_closed)?.nome }}</p>
           <p><strong>Comentário Closed:</strong> {{ incidente.comentario_closed }}</p>
         </div>
         <div style="justify-content: center; display: flex; margin: 10px;">
-          <button :disabled="user.perfil === 'viewer'" class="button-status" :class="buttonStatus(incidente.status)" @click="statusIncidente(incidente);">{{ incidente.status }}</button>
-          <button :disabled="user.perfil === 'viewer'" class="button-status" style="width: 90px;" @click="reexecuteIncidente; reexecuteModal = true">Reexecutar</button>
+          <button :disabled="LoggedUser.perfil === 'viewer'" class="button-status" :class="buttonStatus(incidente.status)" @click="statusIncidente(incidente);">{{ incidente.status }}</button>
+          <button :disabled="LoggedUser.perfil === 'viewer'" class="button-status" style="width: 90px;" @click="reexecuteIncidente; reexecuteModal = true">Reexecutar</button>
+        </div>
+        <div style="justify-content: center; display: flex; margin: 10px;">
+          <label for="user" style="margin: 10px;">Escalonamento Manual</label>
+          <select v-model="selectedUserId" id="user">
+            <option disabled value="">Selecione um usuário</option>
+            <option v-for="user in users" :key="user.uid" :value="user.uid">{{ user.email }}</option>
+          </select>
+          <button class="button-status" style="margin: 10px" @click="escalonarIncidente">Salvar</button>
         </div>
         <hr/>
         <div class="modal-details">
@@ -146,6 +155,9 @@
 </template>
 
 <script>
+import { onSnapshot, collection } from 'firebase/firestore';
+import { db } from '../firebaseConfig.js';
+
 export default {
   name: 'IncidentesView',
   data() {
@@ -153,6 +165,7 @@ export default {
       incidente: {
         id: '',
         regra_id: '',
+        user_escalado: '',
         user_id_ack: '',
         user_id_closed: '',
         status: '',
@@ -163,10 +176,20 @@ export default {
         closed_at: '',
         logs: [],
       },
+      user: {
+        uid: '',
+        nome: '',
+        email: '',
+        perfil: '',
+        roles: '',
+      },
+      selectedUserId: '',
+      unsubscribe: null,
       novoComentario: '',
       incidentes: [],
       regras: [],
-      user: {},
+      LoggedUser: {},
+      users: [],
       filtroStatus: '',
       filtroRegra: '',
       filtroPrioridade: '',
@@ -180,6 +203,7 @@ export default {
   methods: {
     detalhesIncidente(incidente) {
       this.incidente.id = incidente.id
+      this.incidente.user_escalado = incidente.user_escalado
       this.incidente.regra_id = incidente.regra_id
       this.incidente.user_id_ack = incidente.user_id_ack
       this.incidente.user_id_closed = incidente.user_id_closed
@@ -206,7 +230,7 @@ export default {
     carregarLocalStorage() {
       this.incidentes = JSON.parse(localStorage.getItem('incidentes')) || []
       this.regras = JSON.parse(localStorage.getItem('regras')) || []
-      this.user = JSON.parse(localStorage.getItem('userData')) || {}
+      this.LoggedUser = JSON.parse(localStorage.getItem('userData')) || {}
     },
 
     salvarLocalStorage() {
@@ -230,9 +254,10 @@ export default {
       if (this.incidente.status === 'ack') {
         data = {
           id: this.incidente.id,
+          user_escalado: this.incidente.user_escalado,
           regra_id: this.incidente.regra_id,
-          user_id_ack: this.incidente.user_id_ack || this.user.id,
-          user_id_closed: this.user.id,
+          user_id_ack: this.incidente.user_id_ack || this.LoggedUser.id,
+          user_id_closed: this.LoggedUser.id,
           status: 'closed',
           comentario_ack: this.incidente.comentario_ack || this.novoComentario,
           comentario_closed: this.novoComentario,
@@ -247,7 +272,7 @@ export default {
         data = {
           id: this.incidente.id,
           regra_id: this.incidente.regra_id,
-          user_id_ack: this.user.id,
+          user_id_ack: this.LoggedUser.id,
           user_id_closed: this.incidente.user_id_closed,
           status: 'ack',
           comentario_ack: this.novoComentario,
@@ -265,6 +290,24 @@ export default {
       this.salvarLocalStorage()
       this.limparComentario()
       this.comentarioModal = false
+      this.atualizarModal(this.incidente.id)
+    },
+    escalonarIncidente() {
+      if (!this.selectedUserId) {
+        alert('Por favor, selecione um usuário para escalonamento.')
+        return
+      }
+
+      if(this.incidente.status === 'closed'){
+        alert('Não é possível escalonar um incidente fechado.')
+        return
+      }
+
+      const index = this.incidentes.findIndex((i) => i.id === this.incidente.id)
+      this.incidentes[index].user_escalado = this.selectedUserId
+
+      this.salvarLocalStorage()
+      this.selectedUserId = ''
       this.atualizarModal(this.incidente.id)
     },
     atualizarModal(incidenteId) {
@@ -295,9 +338,19 @@ export default {
         this.pagFim += 5;
       }
     },
+    getAllUsers() {
+      this.unsubscribe = onSnapshot(collection(db, 'users'), (snapshot) => {
+        this.users = [];
+        snapshot.forEach((doc) => {
+          this.users.push({uid: doc.id, ...doc.data()})
+        })
+      })
+    },
   },
-  mounted() {
+  created() {
+    this.getAllUsers()
     this.carregarLocalStorage()
+
     const incidenteId = this.$route.query.incidenteId
     if (incidenteId) {
       const incidente = this.incidentes.find(i => i.id == incidenteId)
@@ -307,16 +360,21 @@ export default {
       }
     }
   },
-  watch: {
-  '$route.query.incidenteId'(novoId) {
-    if (novoId) {
-      const incidente = this.incidentes.find(i => i.id == novoId)
-      if (incidente) {
-        this.incidenteModal = true
-        this.detalhesIncidente(incidente)
-      }
+  beforeUnmount() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
     }
-  }
-},
+  },
+  watch: {
+    '$route.query.incidenteId'(novoId) {
+      if (novoId) {
+        const incidente = this.incidentes.find(i => i.id == novoId)
+        if (incidente) {
+          this.incidenteModal = true
+          this.detalhesIncidente(incidente)
+        }
+      }
+    },
+  },
 }
 </script>

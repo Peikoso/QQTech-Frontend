@@ -185,6 +185,7 @@ export function initMocks() {
   const incidentesMock = [
     {
       id: 'inc-0001',
+      user_escalado: 'xFqKTC9mMUMxJtuJM3dVtsMV9SY2',
       regra_id: '1a2b3c4d-0001',
       user_id_ack: '',
       user_id_closed: '',
@@ -200,8 +201,9 @@ export function initMocks() {
     },
     {
       id: 'inc-0002',
+      user_escalado: 'fbMaxkasRefAgVxeSuxeTJIF5AS2',
       regra_id: '1a2b3c4d-0002',
-      user_id_ack: 'user-002',
+      user_id_ack: 'xFqKTC9mMUMxJtuJM3dVtsMV9SY2',
       user_id_closed: '',
       status: 'ack',
       comentario_ack: 'Equipe de infraestrutura informada',
@@ -211,14 +213,15 @@ export function initMocks() {
       closed_at: '',
       logs: [
         { id: 'log-0002', incidente_id: 'inc-0002', time: '2025-10-23 08:45', message: 'Incidente criado' },
-        { id: 'log-0003', incidente_id: 'inc-0002', time: '2025-10-23 08:50', message: 'Incidente reconhecido por user-002' }
+        { id: 'log-0003', incidente_id: 'inc-0002', time: '2025-10-23 08:50', message: 'Incidente reconhecido' }
       ],
     },
     {
       id: 'inc-0003',
+      user_escalado: 'mniYEzNopmPB08XkK5jDuTeANro1',
       regra_id: '1a2b3c4d-0003',
-      user_id_ack: 'user-003',
-      user_id_closed: 'user-003',
+      user_id_ack: 'fbMaxkasRefAgVxeSuxeTJIF5AS2',
+      user_id_closed: 'xFqKTC9mMUMxJtuJM3dVtsMV9SY2',
       status: 'closed',
       comentario_ack: 'Problema resolvido após ajuste no servidor',
       comentario_closed: 'Problema resolvido após ajuste no servidor',
@@ -227,12 +230,13 @@ export function initMocks() {
       closed_at: '2025-10-22 17:00',
       logs: [
         { id: 'log-0004', incidente_id: 'inc-0003', time: '2025-10-22 16:20', message: 'Incidente criado' },
-        { id: 'log-0005', incidente_id: 'inc-0003', time: '2025-10-22 16:25', message: 'Incidente reconhecido por user-003' },
-        { id: 'log-0006', incidente_id: 'inc-0003', time: '2025-10-22 17:00', message: 'Incidente fechado por user-003' }
+        { id: 'log-0005', incidente_id: 'inc-0003', time: '2025-10-22 16:25', message: 'Incidente reconhecido' },
+        { id: 'log-0006', incidente_id: 'inc-0003', time: '2025-10-22 17:00', message: 'Incidente fechado' }
       ],
     },
     {
       id: 'inc-0004',
+      user_escalado: 'xFqKTC9mMUMxJtuJM3dVtsMV9SY2',
       regra_id: '1a2b3c4d-0004',
       user_id_ack: '',
       user_id_closed: '',
@@ -248,8 +252,9 @@ export function initMocks() {
     },
     {
       id: 'inc-0005',
+      user_escalado: 'mniYEzNopmPB08XkK5jDuTeANro1',
       regra_id: '1a2b3c4d-0005',
-      user_id_ack: 'user-005',
+      user_id_ack: 'xFqKTC9mMUMxJtuJM3dVtsMV9SY2',
       user_id_closed: '',
       status: 'ack',
       comentario_ack: 'Verificar processos ativos',
@@ -259,11 +264,12 @@ export function initMocks() {
       closed_at: '',
       logs: [
         { id: 'log-0008', incidente_id: 'inc-0005', time: '2025-10-23 07:30', message: 'Incidente criado' },
-        { id: 'log-0009', incidente_id: 'inc-0005', time: '2025-10-23 07:35', message: 'Incidente reconhecido por user-005' }
+        { id: 'log-0009', incidente_id: 'inc-0005', time: '2025-10-23 07:35', message: 'Incidente reconhecido' }
       ],
     },
     {
       id: 'inc-0006',
+      user_escalado: 'fbMaxkasRefAgVxeSuxeTJIF5AS2',
       regra_id: '1a2b3c4d-0006',
       user_id_ack: '',
       user_id_closed: '',
@@ -279,6 +285,7 @@ export function initMocks() {
     },
     {
       id: 'inc-0007',
+      user_escalado: 'xFqKTC9mMUMxJtuJM3dVtsMV9SY2',
       regra_id: '1a2b3c4d-0007',
       user_id_ack: '',
       user_id_closed: '',
@@ -294,9 +301,10 @@ export function initMocks() {
     },
     {
       id: 'inc-0008',
+      user_escalado: 'mniYEzNopmPB08XkK5jDuTeANro1',
       regra_id: '1a2b3c4d-0008',
-      user_id_ack: 'user-008',
-      user_id_closed: 'user-008',
+      user_id_ack: 'xFqKTC9mMUMxJtuJM3dVtsMV9SY2',
+      user_id_closed: 'xFqKTC9mMUMxJtuJM3dVtsMV9SY2',
       status: 'closed',
       comentario_ack: 'Serviço reiniciado com sucesso',
       comentario_closed: 'Serviço reiniciado com sucesso',
@@ -305,15 +313,16 @@ export function initMocks() {
       closed_at: '2025-10-22 14:45',
       logs: [
         { id: 'log-0012', incidente_id: 'inc-0008', time: '2025-10-22 14:10', message: 'Incidente criado' },
-        { id: 'log-0013', incidente_id: 'inc-0008', time: '2025-10-22 14:15', message: 'Incidente reconhecido por user-008' },
-        { id: 'log-0014', incidente_id: 'inc-0008', time: '2025-10-22 14:45', message: 'Incidente fechado por user-008' }
+        { id: 'log-0013', incidente_id: 'inc-0008', time: '2025-10-22 14:15', message: 'Incidente reconhecido' },
+        { id: 'log-0014', incidente_id: 'inc-0008', time: '2025-10-22 14:45', message: 'Incidente fechado' }
       ],
     },
     {
       id: 'inc-0009',
+      user_escalado: 'fbMaxkasRefAgVxeSuxeTJIF5AS2',
       regra_id: '1a2b3c4d-0009',
-      user_id_ack: 'user-009',
-      user_id_closed: 'user-009',
+      user_id_ack: 'mniYEzNopmPB08XkK5jDuTeANro1',
+      user_id_closed: 'mniYEzNopmPB08XkK5jDuTeANro1',
       status: 'closed',
       comentario_ack: 'Problema resolvido após reinício do serviço',
       comentario_closed: 'Problema resolvido após reinício do serviço',
@@ -322,12 +331,13 @@ export function initMocks() {
       closed_at: '2025-10-22 15:30',
       logs: [
         { id: 'log-0015', incidente_id: 'inc-0009', time: '2025-10-22 15:00', message: 'Incidente criado' },
-        { id: 'log-0016', incidente_id: 'inc-0009', time: '2025-10-22 15:05', message: 'Incidente reconhecido por user-009' },
-        { id: 'log-0017', incidente_id: 'inc-0009', time: '2025-10-22 15:30', message: 'Incidente fechado por user-009' }
+        { id: 'log-0016', incidente_id: 'inc-0009', time: '2025-10-22 15:05', message: 'Incidente reconhecido' },
+        { id: 'log-0017', incidente_id: 'inc-0009', time: '2025-10-22 15:30', message: 'Incidente fechado' }
       ],
     },
     {
       id: 'inc-0010',
+      user_escalado: 'xFqKTC9mMUMxJtuJM3dVtsMV9SY2',
       regra_id: '1a2b3c4d-0010',
       user_id_ack: '',
       user_id_closed: '',
