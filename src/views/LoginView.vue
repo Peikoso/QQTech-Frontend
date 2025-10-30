@@ -29,7 +29,7 @@
             />
           </div>
           <div class="form-group">
-            <button class="login-button">Login</button>
+            <button :disabled="isLoadingLogin || isLoadingVisitante" class="login-button">{{ isLoadingLogin ? 'Carregando...' : 'Login' }}</button>
           </div>
         </form>
         <div style="display: flex; justify-content: space-between; margin-top: 1rem;">
@@ -37,7 +37,7 @@
           <router-link :to="{ name: 'acesso' }" class="link" style="width: 48%; text-align: center; background-color:  #24723b;">Solicitar Acesso</router-link>
         </div>
         <div class="form-group">
-          <button @click="anonymousLogin" class="anonymous-button">Visitante</button>
+          <button :disabled="isLoadingLogin || isLoadingVisitante" @click="anonymousLogin" class="anonymous-button">{{ isLoadingVisitante ? 'Carregando...' : 'Visitante' }}</button>
         </div>
       </div>
     </div>
@@ -54,10 +54,13 @@ export default {
     return {
       email: '',
       password: '',
+      isLoadingLogin: false,
+      isLoadingVisitante: false,
     }
   },
   methods: {
     async handleLogin() {
+      this.isLoadingLogin = true
       const auth = getAuth()
       try {
         await signInWithEmailAndPassword(auth, this.email, this.password)
@@ -105,12 +108,21 @@ export default {
         } catch (error) {
           console.error('Erro ao criar usuário ou logar: ', error.code, error.message)
         }
+      } finally {
+        this.isLoadingLogin = false
       }
     },
     async anonymousLogin() {
+      this.isLoadingVisitante = true
       const auth = getAuth()
-      await signInAnonymously(auth)
-      this.$router.push({ name: 'dashboard' })
+      try {
+        await signInAnonymously(auth)
+        this.$router.push({ name: 'dashboard' })
+      } catch (error) {
+        console.error('Erro ao fazer login anônimo: ', error.code, error.message)
+      } finally {
+        this.isLoadingVisitante = false
+      }
     },
   },
 }

@@ -245,7 +245,7 @@ export default {
       }
     },
   },
-  mounted() {
+  created() {
     this.getAllUsers();
   },
   beforeUnmount() {

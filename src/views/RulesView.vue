@@ -359,7 +359,7 @@ export default {
       }
     },
   },
-  mounted() {
+  created() {
     this.regras = this.carregarLocalStorageRegras();
   }
 }

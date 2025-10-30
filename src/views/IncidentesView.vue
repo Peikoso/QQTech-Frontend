@@ -51,6 +51,7 @@
               <td data-label="Aberta em">{{ incidente.created_at }}</td>
               <td data-label="Status" class="actions">
                 <button
+                  :disabled="user.perfil === 'viewer'"
                   class="button-status"
                   :class="buttonStatus(incidente.status)"
                   @click="statusIncidente(incidente)"
@@ -85,8 +86,8 @@
           <p><strong>Comentário Closed:</strong> {{ incidente.comentario_closed }}</p>
         </div>
         <div style="justify-content: center; display: flex; margin: 10px;">
-          <button class="button-status" :class="buttonStatus(incidente.status)" @click="statusIncidente(incidente);">{{ incidente.status }}</button>
-          <button class="button-status" style="width: 90px;" @click="reexecuteIncidente; reexecuteModal = true">Reexecutar</button>
+          <button :disabled="user.perfil === 'viewer'" class="button-status" :class="buttonStatus(incidente.status)" @click="statusIncidente(incidente);">{{ incidente.status }}</button>
+          <button :disabled="user.perfil === 'viewer'" class="button-status" style="width: 90px;" @click="reexecuteIncidente; reexecuteModal = true">Reexecutar</button>
         </div>
         <hr/>
         <div class="modal-details">

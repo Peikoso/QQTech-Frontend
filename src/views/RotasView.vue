@@ -240,7 +240,7 @@ export default {
       }
     },
   },
-  mounted() {
+  created() {
       this.getAllUsers();
       this.getAllEscalas();
   },

@@ -192,7 +192,7 @@ export default {
       }
     }
   },
-  mounted() {
+  created() {
     this.perfilValues();
   },
   watch: {

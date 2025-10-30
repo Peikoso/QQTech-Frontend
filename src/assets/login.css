@@ -81,6 +81,12 @@ label {
   box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
 }
 
+.login-button:disabled {
+  background: #a5d6a7;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
 .anonymous-button {
   width: 100%;
   padding: 14px;
@@ -98,6 +104,12 @@ label {
 .anonymous-button:hover {
   background: #666;
   box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+}
+
+.anonymous-button:disabled {
+  background: #999;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 @media (max-width: 768px) {

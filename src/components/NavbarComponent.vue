@@ -14,11 +14,15 @@
       <br />
       <h2 class="logo">Plantão Monitor</h2>
       <nav>
-        <router-link :to="{ name: 'dashboard' }" class="link" active-class="ativo"
-          >Dashboard</router-link
+        <router-link
+        :to="{ name: 'dashboard' }"
+        class="link"
+        active-class="ativo"
+        >
+        Dashboard
+        </router-link
         >
         <router-link
-          v-if="!(userData.perfil === 'viewer')"
           :to="{ name: 'incidentes' }"
           class="link"
           active-class="ativo"
@@ -336,7 +340,6 @@ export default {
         localStorage.removeItem('userData')
       }
 
-      console.log(this.userData)
       localStorage.setItem('userData', JSON.stringify(this.userData))
     },
     clearUserInfo() {
@@ -409,7 +412,7 @@ export default {
       }
     },
   },
-  mounted() {
+  created() {
     this.getUserInfo()
     this.carregarLocalStorage()
   },

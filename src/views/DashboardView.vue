@@ -162,7 +162,6 @@ export default{
     carregarLocalStorage() {
       this.incidentes = JSON.parse(localStorage.getItem('incidentes')) || []
       this.regras = JSON.parse(localStorage.getItem('regras')) || []
-      this.user = JSON.parse(localStorage.getItem('userData')) || {}
     },
 
     salvarLocalStorage() {
@@ -263,7 +262,15 @@ export default{
       }
     },
   },
-  mounted(){
+  created(){
+    const checkUser = setInterval(() => {
+      const userData = JSON.parse(localStorage.getItem('userData'))
+      if (userData) {
+        this.user = userData
+        clearInterval(checkUser)
+      }
+    }, 100);
+
     this.carregarLocalStorage()
   }
 }
