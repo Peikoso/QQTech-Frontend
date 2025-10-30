@@ -129,7 +129,7 @@
           <br><br>
           <h3>{{ incidentes_escalonados }}</h3>
           <br><br>
-          <p>Incidentes que precisaram de escalonamento automático</p>
+          <p>Incidentes que precisaram de escalonamento manual</p>
         </div>
       </div>
       <div class="small-view-container">
