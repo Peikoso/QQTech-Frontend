@@ -85,7 +85,7 @@
       <div class="modal-content">
         <button class="close-btn" @click="politicaRotaModal = false">&times;</button>
         <h2>Política de Rota</h2>
-        <p>Aqui você pode definir as políticas relacionadas às rotas de trabalho.</p>
+        <p>Aqui você pode definir as políticas relacionadas ao escalonamento automático. Se não houver ACK, o sistema irá considerar o timeout definido.</p>
 
         <label for="timeout">Tempo de timeout (minutos)</label>
         <input type="number" id="timeout" v-model="timeout" placeholder="Tempo de timeout (minutos)">
