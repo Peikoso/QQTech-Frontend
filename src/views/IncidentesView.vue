@@ -271,6 +271,7 @@ export default {
       if (this.incidente.status === 'open') {
         data = {
           id: this.incidente.id,
+          user_escalado: this.incidente.user_escalado,
           regra_id: this.incidente.regra_id,
           user_id_ack: this.LoggedUser.id,
           user_id_closed: this.incidente.user_id_closed,

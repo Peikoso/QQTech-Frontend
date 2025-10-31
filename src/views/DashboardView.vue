@@ -130,7 +130,7 @@
     </div>
     <div v-if="comentarioModal" class="modal">
       <div class="modal-content">
-        <button class="close-btn" @click="comentarioModal = false; this.limparComentario()">&times;</button>
+        <button class="close-btn" @click="comentarioModal = false; this.limparIncidente()">&times;</button>
         <form @submit.prevent="adicionarComentario()">
           <label for="comentario">Comentário</label>
           <textarea id="comentario" v-model="novoComentario"></textarea>
@@ -150,6 +150,7 @@ export default{
       incidente: {
         id: '',
         regra_id: '',
+        user_escalado: '',
         user_id_ack: '',
         user_id_closed: '',
         status: '',
@@ -200,6 +201,7 @@ export default{
     mudarStatus(incidente) {
       if (incidente.status === 'ack' || incidente.status === 'open') {
         this.incidente.id = incidente.id
+        this.incidente.user_escalado = incidente.user_escalado
         this.incidente.regra_id = incidente.regra_id
         this.incidente.user_id_ack = incidente.user_id_ack
         this.incidente.user_id_closed = incidente.user_id_closed
@@ -219,6 +221,7 @@ export default{
       if (this.incidente.status === 'ack') {
         data = {
           id: this.incidente.id,
+          user_escalado: this.incidente.user_escalado,
           regra_id: this.incidente.regra_id,
           user_id_ack: this.incidente.user_id_ack,
           user_id_closed: this.user.id,
@@ -235,6 +238,7 @@ export default{
       if (this.incidente.status === 'open') {
         data = {
           id: this.incidente.id,
+          user_escalado: this.incidente.user_escalado,
           regra_id: this.incidente.regra_id,
           user_id_ack: this.user.id,
           user_id_closed: this.incidente.user_id_closed,
@@ -258,6 +262,7 @@ export default{
     limparIncidente() {
       this.incidente.id = ''
       this.incidente.regra_id = ''
+      this.incidente.user_escalado = ''
       this.incidente.user_id_ack = ''
       this.incidente.user_id_closed = ''
       this.incidente.status = ''
