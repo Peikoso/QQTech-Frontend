@@ -223,6 +223,7 @@ td p {
 /* Botões */
 button,
 td button {
+  min-width: 80px;
   background-color: #24723b;
   color: white;
   border: none;

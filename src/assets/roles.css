@@ -1,0 +1,15 @@
+td[data-label="Roles"] {
+  display: flex;
+  flex-wrap: wrap;      /* permite quebrar para a próxima linha se necessário */
+  gap: 5px;             /* espaço entre as tags */
+}
+
+.role-badge {
+  padding: 3px 10px;
+  border-radius: 12px;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  white-space: nowrap;  /* impede que o texto quebre dentro da tag */
+  text-align: center;
+}

@@ -108,9 +108,21 @@
               <input type="time" id="hora_final" v-model="regra.hora_final">
             </div>
           </div>
-
-          <label for="roles">Roles (separados por vírgula)</label>
-          <input type="text" id="roles" placeholder="INFRA, DEV, CANAIS_DIGITAIS..." v-model="regra.roles">
+          <label for="roles">Roles</label>
+          <div>
+            <span
+            v-for="(role, index) in regra.roles" :key="index"
+            :style="{ backgroundColor: getRoleColor(role) }"
+            class="role-badge">
+              {{ role }}
+              <button style="all: unset; cursor: pointer;" @click="removerRole(index)">&times;</button>
+            </span>
+          </div>
+          <select id="roles" v-model="selectedRole">
+            <option value="" disabled selected>Selecione uma role</option>
+            <option v-for="(role, index) in roles" :key="index" :value="role">{{ role.nome }}</option>
+          </select>
+          <button @click.prevent="adicionarRole">Adicionar Role</button>
 
           <div class="row">
             <div class="col">
@@ -201,13 +213,15 @@ export default {
         timeout: 0,
         hora_inicio: '00:00',
         hora_final: '00:00',
-        roles: '',
+        roles: [],
         notificacao: true,
         silenciar: false,
         executar: false,
         data_adiar: null
       },
       regras: [],
+      selectedRole: '',
+      roles: [],
       filtro: '',
       regraModal: false,
       modoEdicao: false,
@@ -227,6 +241,20 @@ export default {
     }
   },
   methods: {
+    adicionarRole(){
+      const role = this.selectedRole;
+      if(!this.regra.roles.includes(role.nome)){
+        this.regra.roles.push(role.nome);
+      }
+      this.selectedRole = ""
+    },
+    removerRole(index){
+      this.regra.roles.splice(index, 1);
+    },
+    getRoleColor(roleName){
+      const role = this.roles.find(r => r.nome === roleName);
+      return role ? role.cor : '#bdc3c7';
+    },
     salvarRegras() {
       const data = {
         nome: this.regra.nome,
@@ -307,10 +335,9 @@ export default {
       this.limparForm()
       this.deleteModal = false
     },
-    carregarLocalStorageRegras() {
-      const dados = JSON.parse(localStorage.getItem('regras')) || [];
-
-      return dados
+    carregarLocalStorage() {
+      this.regras = JSON.parse(localStorage.getItem('regras')) || [];
+      this.roles = JSON.parse(localStorage.getItem('roles')) || [];
     },
     salvarLocalStorageRegras() {
       localStorage.setItem('regras', JSON.stringify(this.regras))
@@ -327,11 +354,12 @@ export default {
       this.regra.timeout = 0;
       this.regra.hora_inicio = '00:00';
       this.regra.hora_final = '00:00';
-      this.regra.roles = '';
+      this.regra.roles = [];
       this.regra.notificacao = true;
       this.regra.silenciar = false;
       this.regra.executar = false;
       this.regra.data_adiar = null;
+      this.selectedRole = '';
     },
     limparSandbox(){
       this.sandbox.sql = '';
@@ -360,7 +388,7 @@ export default {
     },
   },
   created() {
-    this.regras = this.carregarLocalStorageRegras();
+    this.carregarLocalStorage();
   }
 }
 </script>

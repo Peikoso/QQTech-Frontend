@@ -9,6 +9,7 @@ import '@/assets/login.css'
 import '@/assets/navbar.css'
 import '@/assets/saveMessage.css'
 import '@/assets/perfil_foto.css'
+import '@/assets/roles.css'
 
 initMocks()
 

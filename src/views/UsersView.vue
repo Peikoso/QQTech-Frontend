@@ -37,7 +37,15 @@
               <td data-label="Nome">{{ user.nome }}</td>
               <td data-label="Email">{{ user.email }}</td>
               <td data-label="Matricula">{{ user.matricula }}</td>
-              <td data-label="Roles">{{ user.roles }}</td>
+              <td data-label="Roles">
+                <span
+                  v-for="(role, index) in user.roles" :key="index"
+                  :style="{ backgroundColor: getRoleColor(role) }"
+                  class="role-badge"
+                >
+                  {{ role }}
+                </span>
+              </td>
               <td data-label="Perfil">{{ user.perfil }}</td>
               <td class="actions" data-label="Ações">
                 <button v-if="!user.pending" @click="editarUser(user)">Editar</button>
@@ -56,7 +64,7 @@
     </div>
     <div class="modal" v-if="novoUsuarioModal">
       <div class="modal-content">
-        <button class="close-btn" @click="novoUsuarioModal = false; modoEdicao = false; this.limparForm()">&times;</button>
+        <button class="close-btn" @click="novoUsuarioModal = false; modoEdicao = false; this.limparForm(); this.getAllUsers()">&times;</button>
         <form @submit.prevent="createUser">
           <label for="matricula">Matricula</label>
           <input type="text" id="matricula" placeholder="Ex.: 203102" v-model="user.matricula">
@@ -70,8 +78,21 @@
           <label for="telefone">Telefone</label>
           <input type="number" id="telefone" placeholder="Ex.: 11912345678" v-model="user.telefone">
 
-          <label for="roles">Roles (separados por vírgula)</label>
-          <input type="text" id="roles" placeholder="ex.: CANAIS_DIGITAIS" v-model="user.roles">
+          <label for="roles">Roles</label>
+          <div>
+            <span
+            v-for="(role, index) in user.roles" :key="index"
+            :style="{ backgroundColor: getRoleColor(role) }"
+            class="role-badge">
+              {{ role }}
+              <button style="all: unset; cursor: pointer;" @click="removerRole(index)">&times;</button>
+            </span>
+          </div>
+          <select id="roles" v-model="selectedRole">
+            <option value="" disabled selected>Selecione uma role</option>
+            <option v-for="(role, index) in roles" :key="index" :value="role">{{ role.nome }}</option>
+          </select>
+          <button @click.prevent="adicionarRole">Adicionar Role</button>
 
           <label for="perfil">Perfil</label>
           <select id="perfil" v-model="user.perfil">
@@ -114,11 +135,13 @@ export default {
         telefone: '',
         matricula: '',
         perfil: 'viewer',
-        roles: '',
+        roles: [],
         pending: '',
         createdAt: '',
       },
       users: [],
+      roles: [],
+      selectedRole: '',
       novoUsuarioModal: false,
       modoEdicao: false,
       deleteModal: false,
@@ -131,6 +154,20 @@ export default {
     }
   },
   methods: {
+    adicionarRole(){
+      const role = this.selectedRole;
+      if(role && !this.user.roles.includes(role.nome)){
+        this.user.roles.push(role.nome);
+      }
+      this.selectedRole = ""
+    },
+    removerRole(index){
+      this.user.roles.splice(index, 1);
+    },
+    getRoleColor(roleName){
+      const role = this.roles.find(r => r.nome === roleName);
+      return role ? role.cor : '#bdc3c7';
+    },
     getAllUsers() {
       this.unsubscribe = onSnapshot(collection(db, 'users'), (snapshot) => {
         this.users = [];
@@ -213,7 +250,7 @@ export default {
       this.user.email = ''
       this.user.telefone = ''
       this.user.password = ''
-      this.user.roles = ''
+      this.user.roles = []
       this.user.perfil = 'viewer'
       this.user.pending = ''
       this.user.createdAt = ''
@@ -244,8 +281,12 @@ export default {
         this.pagFim += 5;
       }
     },
+    carregarLocalStorage(){
+      this.roles = JSON.parse(localStorage.getItem('roles')) || [];
+    }
   },
   created() {
+    this.carregarLocalStorage();
     this.getAllUsers();
   },
   beforeUnmount() {

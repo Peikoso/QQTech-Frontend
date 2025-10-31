@@ -36,7 +36,15 @@
               <td data-label="Email">{{ escala.email }}</td>
               <td data-label="Hora Inicio">{{ formatDate(escala.start_dt) }}</td>
               <td data-label="Hora Fim">{{ formatDate(escala.end_dt) }}</td>
-              <td data-label="Roles">{{ escala.roles }}</td>
+              <td data-label="Roles">
+                <span
+                  v-for="(role, index) in escala.roles" :key="index"
+                  :style="{ backgroundColor: getRoleColor(role) }"
+                  class="role-badge"
+                >
+                  {{ role }}
+                </span>
+              </td>
               <td data-label="Perfil">{{ escala.perfil }}</td>
               <td class="actions" data-label="Ações">
                 <button @click="editarEscala(escala)">Editar</button>
@@ -112,7 +120,7 @@ export default {
         nome: '',
         email: '',
         perfil: '',
-        roles: '',
+        roles: [],
       },
       escala: {
         uid: '',
@@ -141,6 +149,10 @@ export default {
     }
   },
   methods: {
+    getRoleColor(roleName){
+      const role = this.roles.find(r => r.nome === roleName);
+      return role ? role.cor : '#bdc3c7';
+    },
     getAllUsers() {
       this.unsubscribeUsers = onSnapshot(collection(db, 'users'), (snapshot) => {
         this.users = [];
@@ -156,6 +168,9 @@ export default {
           this.escalas.push({uid: doc.id, ...doc.data()})
         })
       })
+    },
+    carregarLocalStorage() {
+      this.roles = JSON.parse(localStorage.getItem('roles')) || [];
     },
     async createEscala() {
       const userRef = doc(db, "users", this.selectedUserId);
@@ -243,6 +258,7 @@ export default {
   created() {
       this.getAllUsers();
       this.getAllEscalas();
+      this.carregarLocalStorage();
   },
   beforeUnmount() {
     if(this.unsubscribeUsers){
